@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
+<head th:replace="fragment/base_head.html :: base_head(~{::title})">
     <title th:text="#{main}">Title</title>
 </head>
 <body>
