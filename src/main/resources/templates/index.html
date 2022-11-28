@@ -3,9 +3,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title th:text="#{main.title}">Title</title>
+    <title th:text="#{main}">Title</title>
 </head>
 <body>
-
+    <button th:if="${user == null}" th:text="#{register}" th:onclick="|location.href='/user/register'|"></button>
 </body>
 </html>
