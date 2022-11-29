@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class MemoryUserRepository implements UserRepository {
     private final UserMapper userMapper;
-    private static final Map<String, UserEntity> userStore = new ConcurrentHashMap<>();
+    private final Map<String, UserEntity> userStore = new ConcurrentHashMap<>();
 
     @Override
     public List<UserEntity> findAllUsers() {
@@ -29,13 +29,13 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public UserEntity saveUser(UserRegisterRequest request) {
+    public Optional<UserEntity> saveUser(UserRegisterRequest request) {
         UserEntity userEntity =userMapper.toEntity(request);
         Optional<UserEntity> findUser = findById(userEntity.getId());
-        if(findUser.isEmpty())
-            return null;
+        if(findUser.isPresent())
+            return Optional.empty();
         userStore.put(request.getId(), userEntity);
-        return userEntity;
+        return Optional.of(userEntity);
     }
 
     @Override

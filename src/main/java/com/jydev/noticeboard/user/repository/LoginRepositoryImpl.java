@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class LoginRepositoryImpl implements LoginRepository{
-    private static final Map<String,User> userStore = new ConcurrentHashMap<>();
+    private final Map<String,User> userStore = new ConcurrentHashMap<>();
     @Override
     public void saveUser(String sessionId, User user) {
         userStore.put(sessionId,user);
