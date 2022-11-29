@@ -1,0 +1,42 @@
+package com.jydev.noticeboard.user.repository;
+
+import com.jydev.noticeboard.user.model.Mapper.UserMapper;
+import com.jydev.noticeboard.user.model.entity.UserEntity;
+import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Repository
+@RequiredArgsConstructor
+public class MemoryUserRepository implements UserRepository {
+    private final UserMapper userMapper;
+    private static final Map<String, UserEntity> userStore = new ConcurrentHashMap<>();
+
+    @Override
+    public List<UserEntity> findAllUsers() {
+        return new ArrayList<>(userStore.values());
+    }
+
+    @Override
+    public Optional<UserEntity> findById(String userId) {
+        return findAllUsers().stream()
+                .filter(user -> user.getId().equals(userId))
+                .findFirst();
+    }
+
+    @Override
+    public UserEntity saveUser(UserRegisterRequest request) {
+        return userStore.put(request.getId(), userMapper.toEntity(request));
+    }
+
+    @Override
+    public void deleteUserById(String userId) {
+        userStore.remove(userId);
+    }
+}
