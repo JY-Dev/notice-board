@@ -10,7 +10,16 @@ import com.jydev.noticeboard.user.service.UserServiceImpl;
 
 public class UserDependency {
     public static final UserMapper userMapper = new UserMapper();
-    public static final UserRepository userRepository = new MemoryUserRepository(userMapper);
-    public static final LoginRepository loginRepository = new LoginRepositoryImpl();
-    public static final UserService userService = new UserServiceImpl(userRepository,loginRepository,userMapper);
+
+    public static UserRepository getUserRepository(){
+        return new MemoryUserRepository(userMapper);
+    }
+
+    public static LoginRepository getLoginRepository(){
+        return new LoginRepositoryImpl();
+    }
+
+    public static UserService getUserService(){
+        return new UserServiceImpl(getUserRepository(),getLoginRepository(),userMapper);
+    }
 }
