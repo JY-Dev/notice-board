@@ -1,5 +1,6 @@
 package com.jydev.noticeboard.user.util;
 
+import com.jydev.noticeboard.user.model.User;
 import com.jydev.noticeboard.user.model.UserRole;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
@@ -19,5 +20,9 @@ public class UserMockFactory {
 
     public static UserEntity makeUserEntity(String id, String pw){
         return new UserEntity(email,nickname,id,pw, UserRole.COMMON);
+    }
+
+    public static User makeUser(String id){
+        return new User(email,nickname,id,UserRole.COMMON);
     }
 }
