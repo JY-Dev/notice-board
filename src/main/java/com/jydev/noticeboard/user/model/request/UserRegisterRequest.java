@@ -14,6 +14,7 @@ public class UserRegisterRequest {
     @NotBlank
     private String nickname;
 
+    @NotBlank
     @Email
     private String email;
 
