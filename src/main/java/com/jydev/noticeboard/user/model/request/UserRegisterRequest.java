@@ -21,4 +21,8 @@ public class UserRegisterRequest {
     @NotBlank
     @Size(min = 8,max = 12)
     private String password;
+
+    @NotBlank
+    @Size(min = 8,max = 12)
+    private String confirmPassword;
 }
