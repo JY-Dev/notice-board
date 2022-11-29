@@ -20,11 +20,9 @@ public class UserRegisterRequest {
     @NotBlank
     private String id;
 
-    @NotBlank
     @Size(min = 8,max = 12)
     private String password;
 
-    @NotBlank
     @Size(min = 8,max = 12)
     private String confirmPassword;
 }
