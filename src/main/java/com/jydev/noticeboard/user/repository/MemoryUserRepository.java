@@ -30,7 +30,9 @@ public class MemoryUserRepository implements UserRepository {
 
     @Override
     public UserEntity saveUser(UserRegisterRequest request) {
-        return userStore.put(request.getId(), userMapper.toEntity(request));
+        UserEntity userEntity =userMapper.toEntity(request);
+        userStore.put(request.getId(), userEntity);
+        return userEntity;
     }
 
     @Override
