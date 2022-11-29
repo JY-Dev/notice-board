@@ -25,9 +25,7 @@ public class MemoryUserRepository implements UserRepository {
 
     @Override
     public Optional<UserEntity> findById(String userId) {
-        return findAllUsers().stream()
-                .filter(user -> user.getId().equals(userId))
-                .findFirst();
+        return Optional.ofNullable(userStore.get(userId));
     }
 
     @Override
