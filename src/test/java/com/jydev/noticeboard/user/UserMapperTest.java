@@ -1,9 +1,9 @@
-package com.jydev.noticeboard;
+package com.jydev.noticeboard.user;
 
 import com.jydev.noticeboard.user.model.Mapper.UserMapper;
-import com.jydev.noticeboard.user.model.UserRole;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
+import com.jydev.noticeboard.user.util.UserMockFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -12,17 +12,10 @@ public class UserMapperTest {
 
     @Test
     void userRegisterRequestToEntityTest(){
-        UserRegisterRequest request = new UserRegisterRequest();
         String id = "id";
-        String email = "email";
-        String pw = "password";
-        String nickname = "nickname";
-        request.setId(id);
-        request.setEmail(email);
-        request.setPassword(pw);
-        request.setConfirmPassword(pw);
-        request.setNickname(nickname);
-        UserEntity userEntity = new UserEntity(email,nickname,id,pw, UserRole.COMMON);
+        String pw = "pw";
+        UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest(id,pw);
+        UserEntity userEntity = UserMockFactory.makeUserEntity(id,pw);
         UserEntity result = userMapper.toEntity(request);
         Assertions.assertThat(userEntity).isEqualTo(result);
     }
