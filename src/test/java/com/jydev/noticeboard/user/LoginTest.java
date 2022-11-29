@@ -9,15 +9,18 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 public class LoginTest {
     private UserService userService;
     private final String userId = "id";
     private final String userPw = "pw";
-    private static User registerUser;
+    private Optional<User> registerUser;
 
     @BeforeEach
     void init(){
         userService = UserDependency.getUserService();
+        System.out.println("테스트에염"+userService.getLoginUsers().size());
         UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest(userId, userPw);
         registerUser = userService.registerUser(request);
     }
@@ -25,7 +28,7 @@ public class LoginTest {
     @Test
     void userLoginTest(){
         String sessionId = "sessionId";
-        User loginUser = userService.login(sessionId, userId, userPw);
+        Optional<User> loginUser = userService.login(sessionId, userId, userPw);
         Assertions.assertThat(registerUser).isEqualTo(loginUser);
     }
 
@@ -38,10 +41,10 @@ public class LoginTest {
         String sessionId2 = "sessionId2";
         String sessionId3 = "sessionId3";
         userService.login(sessionId, userId, userPw);
-        User loginUser = userService.login(sessionId2, userId, userPw);
+        Optional<User> loginUser = userService.login(sessionId2, userId, userPw);
         Assertions.assertThat(loginUser).isEqualTo(registerUser);
-        User loginFailUser = userService.login(sessionId3, userId, userPw);
-        Assertions.assertThat(loginFailUser).isNull();
+        Optional<User> loginFailUser = userService.login(sessionId3, userId, userPw);
+        Assertions.assertThat(loginFailUser.isEmpty()).isTrue();
     }
 
     @Test

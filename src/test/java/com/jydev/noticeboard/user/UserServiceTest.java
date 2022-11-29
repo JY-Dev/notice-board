@@ -25,6 +25,18 @@ public class UserServiceTest {
     }
 
     @Test
+    void registerUserConflictTest(){
+        String userId = "id";
+        String userPw = "pw";
+        UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest(userId,userPw);
+        userService.registerUser(request);
+        Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(1);
+        UserMockFactory.makeUserRegisterRequest(userId,userPw);
+        userService.registerUser(request);
+        Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(1);
+    }
+
+    @Test
     void deleteUserTest(){
         String userId = "id";
         String userPw = "pw";

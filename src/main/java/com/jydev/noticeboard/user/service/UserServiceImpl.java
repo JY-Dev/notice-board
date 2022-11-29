@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,17 +21,13 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public User login(String sessionId,String userId, String userPassword) {
-        User user = userRepository.findById(userId)
+    public Optional<User> login(String sessionId, String userId, String userPassword) {
+        Optional<User> loginUser = userRepository.findById(userId)
                 .filter(userEntity -> userEntity.getPassword().equals(userPassword))
                 .map(userMapper::toUser)
-                .orElse(null);
-
-        if(isPossibleLogin(user)){
-            loginRepository.saveUser(sessionId,user);
-            return user;
-        } else
-            return null;
+                .filter(this::isPossibleLogin);
+        loginUser.ifPresent(user -> loginRepository.saveUser(sessionId, user));
+        return loginUser;
     }
 
     @Override
@@ -49,8 +46,9 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public User registerUser(UserRegisterRequest request) {
-        return userMapper.toUser(userRepository.saveUser(request));
+    public Optional<User> registerUser(UserRegisterRequest request) {
+        return userRepository.saveUser(request)
+                .map(userMapper::toUser);
     }
 
     @Override

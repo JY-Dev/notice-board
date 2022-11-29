@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface UserRepository {
     List<UserEntity> findAllUsers();
     Optional<UserEntity> findById(String userId);
-    UserEntity saveUser(UserRegisterRequest request);
+    Optional<UserEntity> saveUser(UserRegisterRequest request);
     void deleteUserById(String userId);
 }
