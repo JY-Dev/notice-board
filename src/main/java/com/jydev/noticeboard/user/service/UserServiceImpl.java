@@ -54,6 +54,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public List<User> getRegisterUsers() {
+        return userRepository.findAllUsers().stream().map(userMapper::toUser).toList();
+    }
+
+    @Override
     public void deleteUser(String userId) {
         userRepository.deleteUserById(userId);
     }

@@ -11,5 +11,6 @@ public interface UserService {
 
     List<User> getLoginUsers();
     User registerUser(UserRegisterRequest request);
+    List<User> getRegisterUsers();
     void deleteUser(String userId);
 }
