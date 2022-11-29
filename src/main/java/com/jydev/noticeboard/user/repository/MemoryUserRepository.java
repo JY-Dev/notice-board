@@ -31,6 +31,9 @@ public class MemoryUserRepository implements UserRepository {
     @Override
     public UserEntity saveUser(UserRegisterRequest request) {
         UserEntity userEntity =userMapper.toEntity(request);
+        Optional<UserEntity> findUser = findById(userEntity.getId());
+        if(findUser.isEmpty())
+            return null;
         userStore.put(request.getId(), userEntity);
         return userEntity;
     }
