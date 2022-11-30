@@ -36,6 +36,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public Optional<User> getLoginUserById(String sessionId) {
+        return loginRepository.getLoginUserById(sessionId);
+    }
+
+    @Override
     public List<User> getLoginUsers() {
         return loginRepository.getUserList();
     }
