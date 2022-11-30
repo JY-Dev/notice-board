@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment/base_head.html :: base_head(~{::title})">
+  <title th:text="#{login}">Title</title>
+</head>
+<body>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-9 col-lg-7 mx-auto">
+      <div class="card border-primary shadow rounded-3 my-5">
+        <div class="p-4 p-sm-5">
+          <h1 class="card-title text-center mb-5 fw-light fs-5" th:text="#{login}"></h1>
+          <form th:object="${userLoginForm}" method="post">
+            <div class="mb-3">
+              <label for="id" th:text="#{id}">UserId</label>
+              <input type="text" class="form-control" id="id" th:errorclass="field-error" th:field="*{id}">
+              <div class="field-error form-text" th:errors="*{id}">아이디 오류</div>
+            </div>
+            <div class="mb-3">
+              <label for="password" th:text="#{password}">UserId</label>
+              <input type="password" class="form-control" id="password" th:errorclass="field-error" th:field="*{password}">
+            </div>
+            <div th:if="${#fields.hasGlobalErrors()}">
+              <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>
+            </div>
+            <div class="mt-5">
+              <button class="w-100 btn btn-primary text-uppercase" type="submit" th:text="#{login}">로그인</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
