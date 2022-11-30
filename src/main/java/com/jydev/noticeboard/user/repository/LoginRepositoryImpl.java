@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
@@ -26,6 +27,11 @@ public class LoginRepositoryImpl implements LoginRepository{
         return userStore.values().stream()
                 .filter(user -> user.getId().equals(userId))
                 .toArray().length;
+    }
+
+    @Override
+    public Optional<User> getLoginUserById(String sessionId) {
+        return Optional.ofNullable(userStore.get(sessionId));
     }
 
     @Override
