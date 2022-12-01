@@ -1,6 +1,7 @@
 package com.jydev.noticeboard.user.repository;
 
 import com.jydev.noticeboard.user.model.Mapper.UserMapper;
+import com.jydev.noticeboard.user.model.UserRole;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +14,15 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-@RequiredArgsConstructor
 public class MemoryUserRepository implements UserRepository {
     private final UserMapper userMapper;
     private final Map<String, UserEntity> userStore = new ConcurrentHashMap<>();
+
+    public MemoryUserRepository(UserMapper userMapper){
+        this.userMapper = userMapper;
+        userStore.put("1234",new UserEntity("1234@naver.com","야옹이","1234","1234", UserRole.SUPER_ADMIN));
+    }
+
 
     @Override
     public List<UserEntity> findAllUsers() {
