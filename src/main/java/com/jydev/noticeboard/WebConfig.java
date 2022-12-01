@@ -1,5 +1,6 @@
 package com.jydev.noticeboard;
 
+import com.jydev.noticeboard.interceptor.LoginCheckInterceptor;
 import com.jydev.noticeboard.interceptor.BlockLoginUserInterceptor;
 import com.jydev.noticeboard.user.LoginUserMethodArgumentResolver;
 import com.jydev.noticeboard.user.service.UserService;
@@ -22,7 +23,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
+        registry.addInterceptor(new LoginCheckInterceptor(userService))
+                .order(1)
+                .addPathPatterns("/post");
         registry.addInterceptor(new BlockLoginUserInterceptor(userService))
                 .order(2)
                 .addPathPatterns("/user/login","/user/register");
