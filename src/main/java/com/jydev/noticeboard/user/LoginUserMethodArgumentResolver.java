@@ -16,7 +16,7 @@ public class LoginUserMethodArgumentResolver implements HandlerMethodArgumentRes
     private final UserService userService;
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        boolean hasAnnotation = parameter.hasParameterAnnotation(LoginUser.class);
+        boolean hasAnnotation = parameter.hasParameterAnnotation(AttributeLoginUser.class);
         boolean hasUserType = User.class.isAssignableFrom(parameter.getParameterType());
         return hasAnnotation && hasUserType;
     }
