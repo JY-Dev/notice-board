@@ -3,8 +3,56 @@
 <head th:fragment="base_head(title)">
     <meta charset="UTF-8">
     <title th:replace="${title}">Title</title>
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link rel="stylesheet" href=
+            "https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
     <link th:href="@{/css/base.css}" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+
+<head th:fragment="summernote(title,linkes,scripts)">
+    <meta charset="UTF-8">
+    <!-- include libraries(jQuery, bootstrap) -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.js"></script>
+    <title th:replace="${title}">Title</title>
+    <th:block th:replace="${scripts}"/>
+    <th:block th:replace="${linkes}"/>
+    <script>
+        $(document).ready(function () {
+            $('#summernote').summernote({
+                focus: true,
+                callbacks: {
+                    onImageUpload: function (files) {
+                        for (let i = 0; i < files.size; i++) {
+                            sendFile(files[i], this);
+                        }
+                    }
+                }
+            });
+        });
+
+        function sendFile(file, el) {
+            var form_data = new FormData();
+            form_data.append('file', file);
+            $.ajax({
+                data: form_data,
+                type: "POST",
+                url: './',
+                cache: false,
+                contentType: false,
+                enctype: 'multipart/form-data',
+                processData: false,
+                success: function (img_name) {
+                    $(el).summernote('editor.insertImage', img_name);
+                }
+            });
+        }
+
+    </script>
 </head>
 <body>
 
