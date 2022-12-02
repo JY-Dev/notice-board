@@ -21,9 +21,16 @@
     <title th:replace="${title}">Title</title>
     <th:block th:replace="${scripts}"/>
     <th:block th:replace="${linkes}"/>
+    <style>
+        .note-editor .note-editable {
+            line-height: 0.2;
+        }
+    </style>
     <script>
         $(document).ready(function () {
             $('#summernote').summernote({
+                height:500,
+                fix:true,
                 focus: true,
                 callbacks: {
                     onImageUpload: function (files) {
