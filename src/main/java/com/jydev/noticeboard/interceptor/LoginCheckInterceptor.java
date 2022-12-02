@@ -13,7 +13,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession(false);
-        if(session != null && userService.getLoginUserById(session.getId()).isPresent()){
+        if(session == null || userService.getLoginUserById(session.getId()).isEmpty()){
             response.sendRedirect("/user/login?redirectURL="+request.getRequestURI());
             return false;
         }
