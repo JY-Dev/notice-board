@@ -65,7 +65,6 @@ public class UserController {
             returnUrl+=redirectUrl;
         } else
             returnUrl+="/";
-        log.info("return Url : {}",returnUrl);
         return returnUrl;
     }
 }
