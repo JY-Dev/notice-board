@@ -7,17 +7,15 @@ import com.jydev.noticeboard.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
-
+@Slf4j
 @Controller
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -52,7 +50,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String userLogin(@Validated @ModelAttribute("userLoginForm") UserLoginRequest userLoginRequest, BindingResult bindingResult,
-                            HttpServletRequest request, RedirectAttributes redirectAttributes){
+                            HttpServletRequest request, @RequestParam("redirectURL") String redirectUrl){
         if(bindingResult.hasErrors()){
             return "user/login";
         }
@@ -62,6 +60,12 @@ public class UserController {
             bindingResult.reject("invalid");
             return "user/login";
         }
-        return "redirect:/";
+        String returnUrl = "redirect:";
+        if(!redirectUrl.isEmpty()){
+            returnUrl+=redirectUrl;
+        } else
+            returnUrl+="/";
+        log.info("return Url : {}",returnUrl);
+        return returnUrl;
     }
 }
