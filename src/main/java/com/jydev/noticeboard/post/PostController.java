@@ -1,0 +1,63 @@
+package com.jydev.noticeboard.post;
+
+import com.jydev.noticeboard.post.model.Post;
+import com.jydev.noticeboard.post.model.request.PostRequest;
+import com.jydev.noticeboard.post.service.PostService;
+import com.jydev.noticeboard.user.AttributeLoginUser;
+import com.jydev.noticeboard.user.model.User;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.Optional;
+
+@Slf4j
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/post")
+public class PostController {
+    private final PostService postService;
+
+    @GetMapping("/page")
+    public String getPage(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
+
+        return "index";
+    }
+
+    @GetMapping
+    public String post(@ModelAttribute("postRequest") PostRequest postRequest) {
+
+        return "post/postForm";
+    }
+
+    @PostMapping
+    public String registerPost(@Validated @ModelAttribute("postRequest") PostRequest postRequest,@AttributeLoginUser User user,
+                               BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if(bindingResult.hasErrors()){
+            return "post/postForm";
+        }
+        postRequest.setUserId(user.getId());
+        Optional<Post> post = postService.registerPost(postRequest);
+        if(post.isEmpty()){
+            redirectAttributes.addAttribute("postRequest",postRequest);
+            return "redirect:/post";
+        }
+        return "redirect:/post/"+post.get().getId();
+    }
+
+    @GetMapping("/{postNumber}")
+    public String postInfo(@PathVariable Long postNumber, HttpServletRequest request) {
+        Optional<Post> post = postService.findPostById(postNumber);
+        if(post.isEmpty()){
+            return "redirect:/";
+        }
+        request.setAttribute("post",post.get());
+        return "post/postInfo";
+    }
+
+
+}
