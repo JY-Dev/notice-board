@@ -1,6 +1,6 @@
 package com.jydev.noticeboard.post.model.entity;
 
-import com.jydev.noticeboard.user.model.User;
+import com.jydev.noticeboard.user.model.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,5 +12,5 @@ public class PostEntity {
     private Long id;
     private String title;
     private String content;
-    private User registerUser;
+    private UserEntity registerUser;
 }
