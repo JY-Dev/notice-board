@@ -20,7 +20,7 @@ public class PostServiceImpl implements PostService{
 
     private final PostMapper postMapper;
     @Override
-    public Optional<Post> savePost(PostRequest request) {
+    public Optional<Post> registerPost(PostRequest request) {
         UserEntity userEntity = userRepository.findById(request.getUserId());
         if(userEntity == null)
             return Optional.empty();

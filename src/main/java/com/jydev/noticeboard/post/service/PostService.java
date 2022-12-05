@@ -6,7 +6,7 @@ import com.jydev.noticeboard.post.model.request.PostRequest;
 import java.util.Optional;
 
 public interface PostService {
-    Optional<Post> savePost(PostRequest request);
+    Optional<Post> registerPost(PostRequest request);
     void deletePostById(Long postId);
     Optional<Post> findPostById(Long postId);
 }
