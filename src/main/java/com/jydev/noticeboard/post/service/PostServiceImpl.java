@@ -36,6 +36,6 @@ public class PostServiceImpl implements PostService{
     @Override
     public Optional<Post> findPostById(Long postId) {
         return Optional.of(postRepository.findPostById(postId))
-                성.map(postMapper::toPost);
+                .map(postMapper::toPost);
     }
 }
