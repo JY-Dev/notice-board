@@ -12,6 +12,5 @@ public class PostRequest {
     @NotBlank
     String title;
     String content;
-    @NotBlank
     String userId;
 }
