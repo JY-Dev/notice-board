@@ -9,6 +9,6 @@ public interface LoginRepository {
     void saveUser(String sessionId, User user);
     void deleteUser(String sessionId);
     int getConcurrentUserCount(String userId);
-    Optional<User> getLoginUserById(String sessionId);
+    User getLoginUserById(String sessionId);
     List<User> getUserList();
 }

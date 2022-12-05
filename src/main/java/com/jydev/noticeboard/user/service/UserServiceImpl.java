@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Optional<User> login(String sessionId, String userId, String userPassword) {
-        Optional<User> loginUser = userRepository.findById(userId)
+        Optional<User> loginUser = Optional.of(userRepository.findById(userId))
                 .filter(userEntity -> userEntity.getPassword().equals(userPassword))
                 .map(userMapper::toUser)
                 .filter(this::isPossibleLogin);
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Optional<User> getLoginUserById(String sessionId) {
-        return loginRepository.getLoginUserById(sessionId);
+        return Optional.of(loginRepository.getLoginUserById(sessionId));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Optional<User> registerUser(UserRegisterRequest request) {
-        return userRepository.saveUser(request)
+        return Optional.of(userRepository.saveUser(request))
                 .map(userMapper::toUser);
     }
 

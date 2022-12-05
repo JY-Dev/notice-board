@@ -30,18 +30,15 @@ public class MemoryUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<UserEntity> findById(String userId) {
-        return Optional.ofNullable(userStore.get(userId));
+    public UserEntity findById(String userId) {
+        return userStore.get(userId);
     }
 
     @Override
-    public Optional<UserEntity> saveUser(UserRegisterRequest request) {
+    public UserEntity saveUser(UserRegisterRequest request) {
         UserEntity userEntity =userMapper.toEntity(request);
-        Optional<UserEntity> findUser = findById(userEntity.getId());
-        if(findUser.isPresent())
-            return Optional.empty();
         userStore.put(request.getId(), userEntity);
-        return Optional.of(userEntity);
+        return userEntity;
     }
 
     @Override

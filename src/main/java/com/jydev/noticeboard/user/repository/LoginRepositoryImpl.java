@@ -30,8 +30,8 @@ public class LoginRepositoryImpl implements LoginRepository{
     }
 
     @Override
-    public Optional<User> getLoginUserById(String sessionId) {
-        return Optional.ofNullable(userStore.get(sessionId));
+    public User getLoginUserById(String sessionId) {
+        return userStore.get(sessionId);
     }
 
     @Override
