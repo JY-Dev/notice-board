@@ -24,7 +24,7 @@ public class PostServiceImpl implements PostService{
         UserEntity userEntity = userRepository.findById(request.getUserId());
         if(userEntity == null)
             return Optional.empty();
-        return Optional.of(postRepository.savePost(request,userEntity))
+        return Optional.ofNullable(postRepository.savePost(request,userEntity))
                 .map(postMapper::toPost);
     }
 
@@ -35,7 +35,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Optional<Post> findPostById(Long postId) {
-        return Optional.of(postRepository.findPostById(postId))
+        return Optional.ofNullable(postRepository.findPostById(postId))
                 .map(postMapper::toPost);
     }
 }

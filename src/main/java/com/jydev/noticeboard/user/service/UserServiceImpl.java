@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Optional<User> getLoginUserById(String sessionId) {
-        return Optional.of(loginRepository.getLoginUserById(sessionId));
+        return Optional.ofNullable(loginRepository.getLoginUserById(sessionId));
     }
 
     @Override
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Optional<User> registerUser(UserRegisterRequest request) {
-        return Optional.of(userRepository.saveUser(request))
+        return Optional.ofNullable(userRepository.saveUser(request))
                 .map(userMapper::toUser);
     }
 
