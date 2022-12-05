@@ -3,6 +3,7 @@ package com.jydev.noticeboard.post.repository;
 import com.jydev.noticeboard.post.model.entity.PostEntity;
 import com.jydev.noticeboard.post.model.request.PostRequest;
 import com.jydev.noticeboard.user.model.User;
+import com.jydev.noticeboard.user.model.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +18,7 @@ public class MemoryPostRepositoryImpl implements PostRepository {
     private final AtomicLong idCnt = new AtomicLong();
 
     @Override
-    public PostEntity savePost(PostRequest request, User registerUser) {
+    public PostEntity savePost(PostRequest request, UserEntity registerUser) {
         long postId = idCnt.get();
         idCnt.set(postId+1);
         PostEntity postEntity = new PostEntity(postId, request.getTitle(), request.getContent(), registerUser);
