@@ -13,7 +13,7 @@
     <meta charset="UTF-8">
     <!-- include libraries(jQuery, bootstrap) -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote-bs4.css" rel="stylesheet">
@@ -34,27 +34,26 @@
                 focus: true,
                 callbacks: {
                     onImageUpload: function (files) {
-                        for (let i = 0; i < files.size; i++) {
-                            sendFile(files[i], this);
-                        }
+                        sendFile(files[0], this);
                     }
                 }
             });
         });
 
         function sendFile(file, el) {
-            var form_data = new FormData();
+            let form_data = new FormData();
             form_data.append('file', file);
             $.ajax({
                 data: form_data,
                 type: "POST",
-                url: './',
+                url: 'http://localhost:8080/file/image',
                 cache: false,
                 contentType: false,
                 enctype: 'multipart/form-data',
                 processData: false,
-                success: function (img_name) {
-                    $(el).summernote('editor.insertImage', img_name);
+                success: function (data) {
+                    let fileUrl = data.fileUrl;
+                    $(el).summernote('editor.insertImage', fileUrl);
                 }
             });
         }
