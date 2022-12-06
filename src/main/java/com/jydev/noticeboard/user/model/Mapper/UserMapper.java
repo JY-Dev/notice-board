@@ -1,7 +1,7 @@
 package com.jydev.noticeboard.user.model.Mapper;
 
 
-import com.jydev.noticeboard.file.ImageFileSystem;
+import com.jydev.noticeboard.file.FileSystem;
 import com.jydev.noticeboard.file.model.FileType;
 import com.jydev.noticeboard.user.model.User;
 import com.jydev.noticeboard.user.model.UserRole;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 public class UserMapper {
-    private final ImageFileSystem fileSystem;
+    private final FileSystem fileSystem;
     @Value("${default.file.image}")
     private String defaultImageFileName;
     public UserEntity toEntity(UserRegisterRequest request){

@@ -22,7 +22,7 @@ import java.net.MalformedURLException;
 @RequestMapping("/file")
 public class FileController {
 
-    private final ImageFileSystem fileSystem;
+    private final FileSystem fileSystem;
 
     @PostMapping("/image")
     public StoreFileResponse storeFile(@RequestBody MultipartFile file, HttpServletRequest request) throws IOException {
@@ -34,7 +34,7 @@ public class FileController {
     public ResponseEntity<Resource> getFile(@PathVariable String fileName) throws MalformedURLException {
         String fileProtocolUrl = fileSystem.getFileProtocolUrl(fileName);
         UrlResource urlResource = new UrlResource(fileProtocolUrl);
-        MediaType mediaType = fileSystem.getImageMediaType(fileName).orElse(MediaType.ALL);
+        MediaType mediaType = fileSystem.getMediaType(FileType.IMAGE,fileName).orElse(MediaType.ALL);
         return ResponseEntity.ok().
                 contentType(mediaType).
                 body(urlResource);
