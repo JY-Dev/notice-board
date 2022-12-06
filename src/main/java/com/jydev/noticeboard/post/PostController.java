@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -50,12 +51,12 @@ public class PostController {
     }
 
     @GetMapping("/{postNumber}")
-    public String postInfo(@PathVariable Long postNumber, HttpServletRequest request) {
+    public String postInfo(@PathVariable Long postNumber, Model model) {
         Optional<Post> post = postService.findPostById(postNumber);
         if(post.isEmpty()){
             return "redirect:/";
         }
-        request.setAttribute("post",post.get());
+        model.addAttribute("post",post.get());
         return "post/postInfo";
     }
 

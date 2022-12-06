@@ -9,6 +9,6 @@ public class PostMapper {
     public Post toPost(PostEntity postEntity) {
         return new Post(postEntity.getId(), postEntity.getRegisterUser().getNickname(),
                 postEntity.getRegisterUser().getId(),
-                postEntity.getTitle(), postEntity.getContent());
+                postEntity.getTitle(), postEntity.getContent(),postEntity.getRegisterDateTime());
     }
 }
