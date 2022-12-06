@@ -3,8 +3,10 @@ package com.jydev.noticeboard.post.repository;
 import com.jydev.noticeboard.post.model.Post;
 import com.jydev.noticeboard.post.model.entity.PostEntity;
 import com.jydev.noticeboard.post.model.request.PostRequest;
+import com.jydev.noticeboard.user.model.Mapper.UserMapper;
 import com.jydev.noticeboard.user.model.UserRole;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
+import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -18,11 +20,17 @@ public class MemoryPostRepositoryImpl implements PostRepository {
     private final Map<Long, PostEntity> storePost = new HashMap<>();
     private final AtomicLong idCnt = new AtomicLong();
 
-    public MemoryPostRepositoryImpl(){
+    public MemoryPostRepositoryImpl(UserMapper userMapper){
         long postId = idCnt.get();
         idCnt.set(postId+1);
         PostRequest postRequest = new PostRequest("안녕","컨텐츠","1234");
-        UserEntity userEntity = new UserEntity("1234@1234","야옹이","1234","1234", UserRole.SUPER_ADMIN);
+        UserRegisterRequest userRegisterRequest = new UserRegisterRequest();
+        userRegisterRequest.setNickname("야옹이");
+        userRegisterRequest.setId("1234");
+        userRegisterRequest.setEmail("1234@1234");
+        userRegisterRequest.setPassword("1234");
+        userRegisterRequest.setConfirmPassword("1234");
+        UserEntity userEntity = userMapper.toEntity(userRegisterRequest);
         PostEntity postEntity = new PostEntity(postId,postRequest.getTitle(),postRequest.getContent(),LocalDateTime.now(),userEntity);
         storePost.put(postId,postEntity);
     }
