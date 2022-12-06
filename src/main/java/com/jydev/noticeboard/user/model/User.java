@@ -8,6 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class User {
+    private String profileImageUrl;
     private String email;
     private String nickname;
     private String id;

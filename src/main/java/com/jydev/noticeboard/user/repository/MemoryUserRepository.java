@@ -20,7 +20,14 @@ public class MemoryUserRepository implements UserRepository {
 
     public MemoryUserRepository(UserMapper userMapper){
         this.userMapper = userMapper;
-        userStore.put("1234",new UserEntity("1234@1234","야옹이","1234","1234", UserRole.SUPER_ADMIN));
+        UserRegisterRequest userRegisterRequest = new UserRegisterRequest();
+        userRegisterRequest.setNickname("야옹이");
+        userRegisterRequest.setId("1234");
+        userRegisterRequest.setEmail("1234@1234");
+        userRegisterRequest.setPassword("1234");
+        userRegisterRequest.setConfirmPassword("1234");
+        UserEntity userEntity = userMapper.toEntity(userRegisterRequest);
+        userStore.put("1234",userEntity);
     }
 
 

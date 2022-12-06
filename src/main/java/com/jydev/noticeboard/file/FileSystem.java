@@ -10,17 +10,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 
 @Component
 public class FileSystem {
 
     @Value("${file.dir}")
-    private String fileDir;
+    protected String fileDir;
 
     @Value("${url}")
-    private String url;
+    protected String url;
 
     private String getFullFilePath(String filePath){
         return fileDir+filePath;
@@ -31,7 +30,7 @@ public class FileSystem {
         String uniqueFileName = getUniqueFileName(resource.getFilename());
         String filePath = getFullFilePath(uniqueFileName);
         file.transferTo(new File(filePath));
-        return new StoreFile(resource.getFilename(),getFileProtocolUrl(uniqueFileName),getHttpProtocolUrl(uniqueFileName,fileType.getProtocol()));
+        return new StoreFile(resource.getFilename(),getFileProtocolUrl(uniqueFileName),getHttpProtocolUrl(uniqueFileName,fileType));
     }
 
     public String getUniqueFileName(String fileName){
@@ -47,21 +46,9 @@ public class FileSystem {
         return "file:"+getFullFilePath(fileName);
     }
 
-    public String getHttpProtocolUrl(String fileName,String fileType){
-        return url+"file/"+fileType+"/"+fileName;
+    public String getHttpProtocolUrl(String fileName,FileType fileType){
+        return url+"file/"+fileType.getProtocol()+"/"+fileName;
     }
 
-    public Optional<MediaType> getImageMediaType(String fileName){
-        String imageExtRegex = "([^s]+(.(?i)(jpe?g|png|gif|bmp))$)";
-        if(!fileName.matches(imageExtRegex))
-            return Optional.empty();
-        else{
-            MediaType mediaType = switch (getExt(fileName)) {
-                case "png" -> MediaType.IMAGE_PNG;
-                case "gif" -> MediaType.IMAGE_GIF;
-                default -> MediaType.IMAGE_JPEG;
-            };
-            return Optional.of(mediaType);
-        }
-    }
+
 }

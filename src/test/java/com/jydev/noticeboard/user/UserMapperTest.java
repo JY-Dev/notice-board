@@ -4,12 +4,13 @@ import com.jydev.noticeboard.user.model.Mapper.UserMapper;
 import com.jydev.noticeboard.user.model.User;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
+import com.jydev.noticeboard.user.util.UserDependency;
 import com.jydev.noticeboard.user.util.UserMockFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 public class UserMapperTest {
-    private final UserMapper userMapper = new UserMapper();
+    private final UserMapper userMapper = UserDependency.userMapper;
     private final String id = "id";
     private final String pw = "pw";
     @Test

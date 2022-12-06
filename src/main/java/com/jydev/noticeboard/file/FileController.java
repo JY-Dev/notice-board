@@ -22,7 +22,7 @@ import java.net.MalformedURLException;
 @RequestMapping("/file")
 public class FileController {
 
-    private final FileSystem fileSystem;
+    private final ImageFileSystem fileSystem;
 
     @PostMapping("/image")
     public StoreFileResponse storeFile(@RequestBody MultipartFile file, HttpServletRequest request) throws IOException {

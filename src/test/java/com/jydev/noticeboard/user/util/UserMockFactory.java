@@ -19,10 +19,10 @@ public class UserMockFactory {
     }
 
     public static UserEntity makeUserEntity(String id, String pw){
-        return new UserEntity(email,nickname,id,pw, UserRole.COMMON);
+        return new UserEntity("",email,nickname,id,pw, UserRole.COMMON);
     }
 
     public static User makeUser(String id){
-        return new User(email,nickname,id,UserRole.COMMON);
+        return new User("",email,nickname,id,UserRole.COMMON);
     }
 }
