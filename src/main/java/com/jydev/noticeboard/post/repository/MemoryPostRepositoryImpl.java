@@ -1,13 +1,10 @@
 package com.jydev.noticeboard.post.repository;
 
-import com.jydev.noticeboard.post.model.Post;
 import com.jydev.noticeboard.post.model.entity.PostEntity;
 import com.jydev.noticeboard.post.model.request.PostRequest;
 import com.jydev.noticeboard.user.model.Mapper.UserMapper;
-import com.jydev.noticeboard.user.model.UserRole;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -21,8 +18,7 @@ public class MemoryPostRepositoryImpl implements PostRepository {
     private final AtomicLong idCnt = new AtomicLong();
 
     public MemoryPostRepositoryImpl(UserMapper userMapper){
-        long postId = idCnt.get();
-        idCnt.set(postId+1);
+        long postId = idCnt.getAndAdd(1);
         PostRequest postRequest = new PostRequest("안녕","컨텐츠","1234");
         UserRegisterRequest userRegisterRequest = new UserRegisterRequest();
         userRegisterRequest.setNickname("야옹이");
