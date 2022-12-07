@@ -5,7 +5,6 @@ import com.jydev.noticeboard.post.model.comment.Comment;
 import com.jydev.noticeboard.post.model.comment.MappingCommentHierarchy;
 import com.jydev.noticeboard.post.model.comment.entity.CommentEntity;
 import com.jydev.noticeboard.post.model.comment.request.CommentRequest;
-import com.jydev.noticeboard.post.model.comment.response.CommentResponse;
 import com.jydev.noticeboard.post.repository.comment.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,12 +30,11 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public CommentResponse getComments(Long postId) {
+    public List<MappingCommentHierarchy> getComments(Long postId) {
         List<CommentEntity> commentEntities = commentRepository.findCommentsByPostId(postId);
-        List<MappingCommentHierarchy> mappingCommentHierarchies = commentEntities.stream()
+        return commentEntities.stream()
                 .filter(commentEntity -> commentEntity.getParentId() == -1)
                 .map(commentMapper::toComment)
                 .map(parentComment -> commentMapper.toMappingCommentHierarchy(commentEntities,parentComment)).toList();
-        return new CommentResponse(postId,mappingCommentHierarchies);
     }
 }
