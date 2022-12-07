@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CommentMapper {
     public Comment toComment(CommentEntity commentEntity){
-        return new Comment(commentEntity.getPostId(),commentEntity.getId(),commentEntity.getParentId(),
+        return new Comment(commentEntity.getId(),commentEntity.getParentId(),
                 commentEntity.getContent(),commentEntity.getCreateDateTime());
     }
 }
