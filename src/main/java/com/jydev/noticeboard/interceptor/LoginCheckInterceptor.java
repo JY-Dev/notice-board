@@ -5,7 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
+
+import java.io.PrintWriter;
 
 @RequiredArgsConstructor
 public class LoginCheckInterceptor implements HandlerInterceptor {
@@ -14,7 +17,14 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession(false);
         if(session == null || userService.getLoginUserById(session.getId()).isEmpty()){
-            response.sendRedirect("/user/login?redirectURL="+request.getRequestURI());
+            String contentType = request.getContentType();
+            if(contentType != null &&contentType.equals("application/json")){
+                PrintWriter writer = response.getWriter();
+                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                response.setContentType("application/json");
+                writer.write("{\"code\" : 401,\"message\" : \"not allow\"}");
+            } else
+                response.sendRedirect("/user/login?redirectURL="+request.getRequestURI());
             return false;
         }
         return true;
