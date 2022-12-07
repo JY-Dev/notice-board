@@ -2,13 +2,14 @@ package com.jydev.noticeboard.post.repository.comment;
 
 import com.jydev.noticeboard.post.model.comment.entity.CommentEntity;
 import com.jydev.noticeboard.post.model.comment.request.CommentRequest;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-
+@Repository
 public class MemoryCommentRepositoryImpl implements CommentRepository {
     Map<Long, CommentEntity> map = new ConcurrentHashMap<>();
 
