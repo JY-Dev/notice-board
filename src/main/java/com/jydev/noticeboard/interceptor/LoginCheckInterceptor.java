@@ -16,7 +16,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         HttpSession session = request.getSession(false);
-        if(session == null || userService.getLoginUserById(session.getId()).isEmpty()){
+        if(session == null || userService.getLoginUser(session.getId()).isEmpty()){
             String contentType = request.getContentType();
             if(contentType != null &&contentType.equals("application/json")){
                 PrintWriter writer = response.getWriter();

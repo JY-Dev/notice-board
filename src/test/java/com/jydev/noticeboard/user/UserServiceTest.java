@@ -54,7 +54,7 @@ public class UserServiceTest {
         String userPw = "pw";
         registerUser(userId,userPw);
         userService.login(sessionId,userId,userPw);
-        Optional<User> result = userService.getLoginUserById(sessionId);
+        Optional<User> result = userService.getLoginUser(sessionId);
         User user = UserMockFactory.makeUser(userId);
         Assertions.assertThat(result.orElse(null)).isEqualTo(user);
     }

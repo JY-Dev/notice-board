@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface PostService {
     Optional<Post> registerPost(PostRequest request);
     void deletePostById(Long postId);
-    Optional<Post> findPostById(Long postId);
+    Optional<Post> getPost(Long postId);
 }

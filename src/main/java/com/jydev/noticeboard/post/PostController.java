@@ -1,11 +1,11 @@
 package com.jydev.noticeboard.post;
 
 import com.jydev.noticeboard.post.model.Post;
+import com.jydev.noticeboard.post.model.comment.request.CommentRequest;
 import com.jydev.noticeboard.post.model.request.PostRequest;
 import com.jydev.noticeboard.post.service.PostService;
 import com.jydev.noticeboard.user.AttributeLoginUser;
 import com.jydev.noticeboard.user.model.User;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -52,12 +52,19 @@ public class PostController {
 
     @GetMapping("/{postNumber}")
     public String postInfo(@PathVariable Long postNumber, Model model) {
-        Optional<Post> post = postService.findPostById(postNumber);
+        Optional<Post> post = postService.getPost(postNumber);
         if(post.isEmpty()){
             return "redirect:/";
         }
         model.addAttribute("post",post.get());
         return "post/postInfo";
+    }
+
+    @ResponseBody
+    @PostMapping("/{postNumber}/comment")
+    public void registerComment(@PathVariable Long postNumber, @RequestBody CommentRequest comment,
+                                Model model, @AttributeLoginUser User user){
+
     }
 
 

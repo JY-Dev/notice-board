@@ -28,7 +28,7 @@ public class LoginUserMethodArgumentResolver implements HandlerMethodArgumentRes
         if(session == null)
             return null;
         else{
-            User user = userService.getLoginUserById(session.getId()).orElse(null);
+            User user = userService.getLoginUser(session.getId()).orElse(null);
             if(user == null)
                 return null;
             webRequest.setAttribute("user",user,0);

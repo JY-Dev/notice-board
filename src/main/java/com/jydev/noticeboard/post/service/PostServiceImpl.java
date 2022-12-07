@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Optional<Post> findPostById(Long postId) {
+    public Optional<Post> getPost(Long postId) {
         return Optional.ofNullable(postRepository.findPostById(postId))
                 .map(postMapper::toPost);
     }

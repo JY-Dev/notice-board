@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Optional<User> getLoginUserById(String sessionId) {
+    public Optional<User> getLoginUser(String sessionId) {
         return Optional.ofNullable(loginRepository.getLoginUserById(sessionId));
     }
 
