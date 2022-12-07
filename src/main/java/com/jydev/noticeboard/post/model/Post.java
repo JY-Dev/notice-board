@@ -1,10 +1,12 @@
 package com.jydev.noticeboard.post.model;
 
+import com.jydev.noticeboard.post.model.comment.MappingCommentHierarchy;
 import com.jydev.noticeboard.user.model.PostUser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -14,4 +16,5 @@ public class Post {
     private String title;
     private String content;
     private LocalDateTime registerDateTime;
+    private List<MappingCommentHierarchy> comments;
 }
