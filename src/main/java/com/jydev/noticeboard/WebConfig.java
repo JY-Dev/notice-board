@@ -25,7 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginCheckInterceptor(userService))
                 .order(1)
-                .addPathPatterns("/post");
+                .addPathPatterns("/post","/post/{*}/*");
         registry.addInterceptor(new BlockLoginUserInterceptor(userService))
                 .order(2)
                 .addPathPatterns("/user/login","/user/register");
