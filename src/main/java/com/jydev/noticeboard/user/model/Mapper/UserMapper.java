@@ -21,6 +21,6 @@ public class UserMapper {
         return new UserEntity(fileSystem.getHttpProtocolUrl(defaultImageFileName, FileType.IMAGE), request.getEmail(),request.getNickname(),request.getId(),request.getPassword(), UserRole.COMMON);
     }
     public User toUser(UserEntity userEntity){
-        return new User(userEntity.getImageUrl(),userEntity.getEmail(),userEntity.getNickname(),userEntity.getId(),userEntity.getRole());
+        return new User(userEntity.getProfileImageUrl(),userEntity.getEmail(),userEntity.getNickname(),userEntity.getId(),userEntity.getRole());
     }
 }

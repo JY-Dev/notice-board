@@ -1,7 +1,6 @@
 package com.jydev.noticeboard.post.model;
 
 import com.jydev.noticeboard.post.model.comment.MappingCommentHierarchy;
-import com.jydev.noticeboard.user.model.PostUser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

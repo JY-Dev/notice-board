@@ -1,13 +1,18 @@
 package com.jydev.noticeboard.post;
 
 import com.jydev.noticeboard.post.model.Post;
+import com.jydev.noticeboard.post.model.comment.Comment;
 import com.jydev.noticeboard.post.model.comment.request.CommentRequest;
 import com.jydev.noticeboard.post.model.request.PostRequest;
 import com.jydev.noticeboard.post.service.PostService;
+import com.jydev.noticeboard.post.service.comment.CommentService;
 import com.jydev.noticeboard.user.AttributeLoginUser;
 import com.jydev.noticeboard.user.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,6 +27,8 @@ import java.util.Optional;
 @RequestMapping("/post")
 public class PostController {
     private final PostService postService;
+
+    private final CommentService commentService;
 
     @GetMapping("/page")
     public String getPage(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
@@ -51,7 +58,7 @@ public class PostController {
     }
 
     @GetMapping("/{postNumber}")
-    public String postInfo(@PathVariable Long postNumber, Model model) {
+    public String postInfo(@PathVariable Long postNumber, Model model, @AttributeLoginUser User user) {
         Optional<Post> post = postService.getPost(postNumber);
         if(post.isEmpty()){
             return "redirect:/";
@@ -62,9 +69,11 @@ public class PostController {
 
     @ResponseBody
     @PostMapping("/{postNumber}/comment")
-    public void registerComment(@PathVariable Long postNumber, @RequestBody CommentRequest comment,
-                                Model model, @AttributeLoginUser User user){
-
+    public ResponseEntity<Comment> registerComment(@PathVariable Long postNumber, @RequestBody CommentRequest commentRequest, @AttributeLoginUser User user){
+        commentRequest.setUserId(user.getId());
+        commentRequest.setPostId(postNumber);
+        Optional<Comment> comment = commentService.registerComment(commentRequest);
+        return new ResponseEntity<>(comment.orElse(null),HttpStatus.OK);
     }
 
 

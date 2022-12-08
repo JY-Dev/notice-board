@@ -12,4 +12,5 @@ public class Comment {
     Long parentId;
     String content;
     LocalDateTime registerDateTime;
+    CommentUser user;
 }

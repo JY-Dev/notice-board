@@ -6,6 +6,8 @@ import com.jydev.noticeboard.post.model.comment.MappingCommentHierarchy;
 import com.jydev.noticeboard.post.model.comment.entity.CommentEntity;
 import com.jydev.noticeboard.post.model.comment.request.CommentRequest;
 import com.jydev.noticeboard.post.repository.comment.CommentRepository;
+import com.jydev.noticeboard.user.model.entity.UserEntity;
+import com.jydev.noticeboard.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +20,15 @@ public class CommentServiceImpl implements CommentService{
 
     private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Optional<Comment> registerComment(CommentRequest commentRequest) {
-        return Optional.ofNullable(commentMapper.toComment(commentRepository.saveComment(commentRequest)));
+        UserEntity userEntity = userRepository.findById(commentRequest.getUserId());
+        if(userEntity == null)
+            return Optional.empty();
+
+        return Optional.ofNullable(commentMapper.toComment(commentRepository.saveComment(commentRequest,userEntity)));
     }
 
     @Override

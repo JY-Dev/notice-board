@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class UserEntity {
-    private String imageUrl;
+    private String profileImageUrl;
     private String email;
     private String nickname;
     private String id;

@@ -1,4 +1,4 @@
-package com.jydev.noticeboard.user.model;
+package com.jydev.noticeboard.post.model;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
