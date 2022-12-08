@@ -15,5 +15,6 @@ public class Post {
     private String title;
     private String content;
     private LocalDateTime registerDateTime;
+    private Integer commentSize;
     private List<MappingCommentHierarchy> comments;
 }

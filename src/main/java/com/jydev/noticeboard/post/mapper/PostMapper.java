@@ -12,8 +12,10 @@ import java.util.List;
 @Component
 public class PostMapper {
     public Post toPost(PostEntity postEntity, List<MappingCommentHierarchy> comments) {
+        int commentsSize = (int)comments.stream().map(MappingCommentHierarchy::getChildComments)
+                .filter(childComments -> !childComments.isEmpty()).count() + comments.size();
         return new Post(postEntity.getId(), toPostUser(postEntity.getRegisterUser()),
-                postEntity.getTitle(), postEntity.getContent(),postEntity.getRegisterDateTime(),comments);
+                postEntity.getTitle(), postEntity.getContent(),postEntity.getRegisterDateTime(),commentsSize,comments);
     }
 
     public PostUser toPostUser(UserEntity userEntity){

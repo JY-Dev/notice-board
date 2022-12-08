@@ -24,8 +24,8 @@ public class MemoryUserRepository implements UserRepository {
         userRegisterRequest.setNickname("야옹이");
         userRegisterRequest.setId("1234");
         userRegisterRequest.setEmail("1234@1234");
-        userRegisterRequest.setPassword("1234");
-        userRegisterRequest.setConfirmPassword("1234");
+        userRegisterRequest.setPassword("!wodud123");
+        userRegisterRequest.setConfirmPassword("!1234");
         UserEntity userEntity = userMapper.toEntity(userRegisterRequest);
         userStore.put("1234",userEntity);
     }
