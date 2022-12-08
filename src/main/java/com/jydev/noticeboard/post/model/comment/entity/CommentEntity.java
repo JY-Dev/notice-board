@@ -11,10 +11,22 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 public class CommentEntity {
-    UserEntity userEntity;
-    Long postId;
-    Long id;
-    Long parentId;
-    String content;
-    LocalDateTime createDateTime;
+    private UserEntity userEntity;
+    private Long postId;
+    private Long id;
+    private Long parentId;
+    private String content;
+    private LocalDateTime createDateTime;
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof CommentEntity other)
+            return userEntity.equals(other.userEntity) && other.id.equals(other.getId());
+        return false;
+    }
 }
