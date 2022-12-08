@@ -10,3 +10,15 @@
 .base-divider{
     border:1px solid darkgray;
 }
+.text-button{
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+.text-button:focus{
+    border: none;
+    outline: none;
+}
