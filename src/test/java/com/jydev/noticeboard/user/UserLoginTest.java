@@ -1,6 +1,7 @@
 package com.jydev.noticeboard.user;
 
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
+import com.jydev.noticeboard.user.util.UserData;
 import com.jydev.noticeboard.user.util.UserDependency;
 import com.jydev.noticeboard.user.model.User;
 import com.jydev.noticeboard.user.service.UserService;
@@ -11,24 +12,20 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-public class LoginTest {
+public class UserLoginTest {
     private UserService userService;
-    private final String userId = "id";
-    private final String userPw = "pw";
     private Optional<User> registerUser;
 
     @BeforeEach
     void init(){
         userService = UserDependency.getUserService();
-        System.out.println("테스트에염"+userService.getLoginUsers().size());
-        UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest(userId, userPw);
+        UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest();
         registerUser = userService.registerUser(request);
     }
 
     @Test
     void userLoginTest(){
-        String sessionId = "sessionId";
-        Optional<User> loginUser = userService.login(sessionId, userId, userPw);
+        Optional<User> loginUser = userService.login(UserData.sessionId, UserData.userId,UserData.userPw);
         Assertions.assertThat(registerUser).isEqualTo(loginUser);
     }
 
@@ -40,19 +37,18 @@ public class LoginTest {
         String sessionId = "sessionId";
         String sessionId2 = "sessionId2";
         String sessionId3 = "sessionId3";
-        userService.login(sessionId, userId, userPw);
-        Optional<User> loginUser = userService.login(sessionId2, userId, userPw);
+        userService.login(sessionId, UserData.userId, UserData.userPw);
+        Optional<User> loginUser = userService.login(sessionId2, UserData.userId, UserData.userPw);
         Assertions.assertThat(loginUser).isEqualTo(registerUser);
-        Optional<User> loginFailUser = userService.login(sessionId3, userId, userPw);
+        Optional<User> loginFailUser = userService.login(sessionId3, UserData.userId, UserData.userPw);
         Assertions.assertThat(loginFailUser.isEmpty()).isTrue();
     }
 
     @Test
     void userLogoutTest(){
-        String sessionId = "sessionId";
-        userService.login(sessionId, userId, userPw);
+        userService.login(UserData.sessionId, UserData.userId, UserData.userPw);
         Assertions.assertThat(userService.getLoginUsers().size()).isEqualTo(1);
-        userService.logout(sessionId);
+        userService.logout(UserData.sessionId);
         Assertions.assertThat(userService.getLoginUsers().size()).isEqualTo(0);
     }
 }

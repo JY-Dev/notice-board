@@ -10,13 +10,27 @@ import com.jydev.noticeboard.post.service.PostService;
 import com.jydev.noticeboard.post.service.PostServiceImpl;
 import com.jydev.noticeboard.post.service.comment.CommentService;
 import com.jydev.noticeboard.post.service.comment.CommentServiceImpl;
+import com.jydev.noticeboard.user.repository.UserRepository;
 import com.jydev.noticeboard.user.util.UserDependency;
 
 public class PostDependency {
-    public static PostRepository postRepository = new MemoryPostRepositoryImpl(UserDependency.userMapper);
     public static PostMapper postMapper = new PostMapper();
     public static CommentMapper commentMapper = new CommentMapper();
-    public static CommentRepository commentRepository = new MemoryCommentRepositoryImpl();
-    public static CommentService commentService = new CommentServiceImpl(commentMapper,commentRepository,UserDependency.getUserRepository());
-    public static PostService postService = new PostServiceImpl(postRepository,UserDependency.getUserRepository(),commentService,postMapper);
+
+    public static final UserRepository userRepository = UserDependency.getUserRepository();
+
+    public static PostRepository getPostRepository(){
+        return new MemoryPostRepositoryImpl(UserDependency.userMapper);
+    }
+
+    public static CommentRepository getCommentRepository(){
+        return new MemoryCommentRepositoryImpl();
+    }
+    public static CommentService getCommentService(){
+        return new CommentServiceImpl(commentMapper,getCommentRepository(),userRepository);
+    }
+
+    public static PostService getPostService(){
+        return new PostServiceImpl(getPostRepository(),userRepository,getCommentService(),postMapper);
+    }
 }

@@ -6,23 +6,22 @@ import com.jydev.noticeboard.user.model.entity.UserEntity;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
 
 public class UserMockFactory {
-    private static final String email = "email";
-    private static final String nickname = "nickname";
-    public static UserRegisterRequest makeUserRegisterRequest(String id,String pw){
+
+    public static UserRegisterRequest makeUserRegisterRequest(){
         UserRegisterRequest request = new UserRegisterRequest();
-        request.setId(id);
-        request.setEmail(email);
-        request.setPassword(pw);
-        request.setConfirmPassword(pw);
-        request.setNickname(nickname);
+        request.setId(UserData.userId);
+        request.setEmail(UserData.email);
+        request.setPassword(UserData.userPw);
+        request.setConfirmPassword(UserData.userPw);
+        request.setNickname(UserData.nickname);
         return request;
     }
 
-    public static UserEntity makeUserEntity(String id, String pw){
-        return new UserEntity("",email,nickname,id,pw, UserRole.COMMON);
+    public static UserEntity makeUserEntity(){
+        return new UserEntity(UserData.profileImageUrl,UserData.email,UserData.nickname,UserData.userId,UserData.userPw, UserRole.COMMON);
     }
 
-    public static User makeUser(String id){
-        return new User("",email,nickname,id,UserRole.COMMON);
+    public static User makeUser(){
+        return new User(UserData.profileImageUrl,UserData.email,UserData.nickname,UserData.userId,UserRole.COMMON);
     }
 }
