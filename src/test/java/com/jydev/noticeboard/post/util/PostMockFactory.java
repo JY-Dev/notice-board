@@ -13,8 +13,8 @@ import java.util.Collections;
 public class PostMockFactory {
 
 
-    public static Post makePost(LocalDateTime dateTime){
-        return new Post(PostData.postId,makePostUser(),"","", dateTime,0, Collections.emptyList());
+    public static Post makePost(){
+        return new Post(PostData.postId,makePostUser(),"","", LocalDateTime.now(),0, Collections.emptyList());
     }
 
     public static PostEntity makePostEntity(){

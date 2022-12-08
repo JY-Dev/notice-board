@@ -18,7 +18,7 @@ public class PostMapperTest {
     @Test
     void PostEntityToPostTest(){
         Post post = postMapper.toPost(PostMockFactory.makePostEntity(), Collections.emptyList());
-        Post result = PostMockFactory.makePost(post.getRegisterDateTime());
+        Post result = PostMockFactory.makePost();
         Assertions.assertThat(result).isEqualTo(post);
     }
 

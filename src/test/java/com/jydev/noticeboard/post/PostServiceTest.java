@@ -7,7 +7,6 @@ import com.jydev.noticeboard.post.util.PostData;
 import com.jydev.noticeboard.post.util.PostDependency;
 import com.jydev.noticeboard.post.util.PostMockFactory;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
-import com.jydev.noticeboard.user.util.UserData;
 import com.jydev.noticeboard.user.util.UserMockFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -29,14 +28,14 @@ public class PostServiceTest {
     public void registerPostTest(){
         PostRequest postRequest = PostMockFactory.makePostRequest();
         Optional<Post> result = postService.registerPost(postRequest);
-        Post post = PostMockFactory.makePost(result.get().getRegisterDateTime());
+        Post post = PostMockFactory.makePost();
         Assertions.assertThat(result.orElse(null)).isEqualTo(post);
     }
 
     @Test
     public void deletePostTest(){
         Optional<Post> post = postService.registerPost(PostMockFactory.makePostRequest());
-        Assertions.assertThat(post.orElse(null)).isEqualTo(PostMockFactory.makePost(post.get().getRegisterDateTime()));
+        Assertions.assertThat(post.orElse(null)).isEqualTo(PostMockFactory.makePost());
         postService.deletePostById(PostData.postId);
         Assertions.assertThat(postService.getPost(PostData.postId).orElse(null)).isNull();
     }
