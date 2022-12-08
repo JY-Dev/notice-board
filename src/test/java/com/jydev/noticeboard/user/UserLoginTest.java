@@ -1,5 +1,6 @@
 package com.jydev.noticeboard.user;
 
+import com.jydev.noticeboard.user.model.LoginStatus;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
 import com.jydev.noticeboard.user.util.UserData;
 import com.jydev.noticeboard.user.util.UserDependency;
@@ -14,19 +15,18 @@ import java.util.Optional;
 
 public class UserLoginTest {
     private UserService userService;
-    private Optional<User> registerUser;
 
     @BeforeEach
     void init(){
         userService = UserDependency.getUserService();
         UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest();
-        registerUser = userService.registerUser(request);
+        userService.registerUser(request);
     }
 
     @Test
     void userLoginTest(){
-        Optional<User> loginUser = userService.login(UserData.sessionId, UserData.userId,UserData.userPw);
-        Assertions.assertThat(registerUser).isEqualTo(loginUser);
+        LoginStatus loginStatus = userService.login(UserData.sessionId, UserData.userId,UserData.userPw);
+        Assertions.assertThat(loginStatus).isEqualTo(LoginStatus.SUCCESS);
     }
 
     /**
@@ -38,10 +38,9 @@ public class UserLoginTest {
         String sessionId2 = "sessionId2";
         String sessionId3 = "sessionId3";
         userService.login(sessionId, UserData.userId, UserData.userPw);
-        Optional<User> loginUser = userService.login(sessionId2, UserData.userId, UserData.userPw);
-        Assertions.assertThat(loginUser).isEqualTo(registerUser);
-        Optional<User> loginFailUser = userService.login(sessionId3, UserData.userId, UserData.userPw);
-        Assertions.assertThat(loginFailUser.isEmpty()).isTrue();
+        userService.login(sessionId2, UserData.userId, UserData.userPw);
+        LoginStatus loginStatus = userService.login(sessionId3, UserData.userId, UserData.userPw);
+        Assertions.assertThat(loginStatus).isEqualTo(LoginStatus.CONCURRENCY_MAX);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.jydev.noticeboard.user;
 
+import com.jydev.noticeboard.user.model.LoginStatus;
 import com.jydev.noticeboard.user.model.User;
 import com.jydev.noticeboard.user.model.request.UserLoginRequest;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
@@ -55,9 +56,12 @@ public class UserController {
             return "user/login";
         }
         HttpSession session = request.getSession();
-        Optional<User> userLogin = userService.login(session.getId(), userLoginRequest.getId(), userLoginRequest.getPassword());
-        if(userLogin.isEmpty()){
-            bindingResult.reject("invalid");
+        LoginStatus loginStatus = userService.login(session.getId(), userLoginRequest.getId(), userLoginRequest.getPassword());
+        if(!loginStatus.equals(LoginStatus.SUCCESS)){
+            String errorCode = "invalid";
+            if(loginStatus.equals(LoginStatus.CONCURRENCY_MAX))
+                errorCode = "concurrency";
+            bindingResult.reject(errorCode);
             return "user/login";
         }
         String returnUrl = "redirect:";

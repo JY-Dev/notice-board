@@ -1,7 +1,9 @@
 package com.jydev.noticeboard.user.service;
 
+import com.jydev.noticeboard.user.model.LoginStatus;
 import com.jydev.noticeboard.user.model.Mapper.UserMapper;
 import com.jydev.noticeboard.user.model.User;
+import com.jydev.noticeboard.user.model.entity.UserEntity;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
 import com.jydev.noticeboard.user.repository.LoginRepository;
 import com.jydev.noticeboard.user.repository.UserRepository;
@@ -21,13 +23,16 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public Optional<User> login(String sessionId, String userId, String userPassword) {
-        Optional<User> loginUser = Optional.of(userRepository.findById(userId))
-                .filter(userEntity -> userEntity.getPassword().equals(userPassword))
-                .map(userMapper::toUser)
-                .filter(this::isPossibleLogin);
-        loginUser.ifPresent(user -> loginRepository.saveUser(sessionId, user));
-        return loginUser;
+    public LoginStatus login(String sessionId, String userId, String userPassword) {
+        UserEntity userEntity = userRepository.findById(userId);
+        if(userEntity.getId().equals(userId) && !userPassword.equals(userEntity.getPassword()))
+            return LoginStatus.INVALID;
+        if(isUserLoginConcurrencyMax(userId))
+            return LoginStatus.CONCURRENCY_MAX;
+        else {
+            loginRepository.saveUser(sessionId, userMapper.toUser(userEntity));
+            return LoginStatus.SUCCESS;
+        }
     }
 
     @Override
@@ -46,7 +51,11 @@ public class UserServiceImpl implements UserService{
     }
 
     private boolean isPossibleLogin(User user){
-        return user != null && loginRepository.getConcurrentUserCount(user.getId()) < CONCURRENT_MAX;
+        return user != null && isUserLoginConcurrencyMax(user.getId());
+    }
+
+    private boolean isUserLoginConcurrencyMax(String userId){
+        return loginRepository.getConcurrentUserCount(userId) >= CONCURRENT_MAX;
     }
 
 
