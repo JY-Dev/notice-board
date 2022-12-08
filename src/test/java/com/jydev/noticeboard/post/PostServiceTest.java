@@ -29,14 +29,14 @@ public class PostServiceTest {
     public void registerPostTest(){
         PostRequest postRequest = PostMockFactory.makePostRequest();
         Optional<Post> result = postService.registerPost(postRequest);
-        Post post = PostMockFactory.makePost(result.get().getId(), result.get().getRegisterDateTime());
+        Post post = PostMockFactory.makePost(result.get().getRegisterDateTime());
         Assertions.assertThat(result.orElse(null)).isEqualTo(post);
     }
 
     @Test
     public void deletePostTest(){
         Optional<Post> post = postService.registerPost(PostMockFactory.makePostRequest());
-        Assertions.assertThat(post.orElse(null)).isEqualTo(PostMockFactory.makePost(PostData.postId,post.get().getRegisterDateTime()));
+        Assertions.assertThat(post.orElse(null)).isEqualTo(PostMockFactory.makePost(post.get().getRegisterDateTime()));
         postService.deletePostById(PostData.postId);
         Assertions.assertThat(postService.getPost(PostData.postId).orElse(null)).isNull();
     }
