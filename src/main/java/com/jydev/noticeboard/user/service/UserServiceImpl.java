@@ -50,14 +50,9 @@ public class UserServiceImpl implements UserService{
         return loginRepository.getUserList();
     }
 
-    private boolean isPossibleLogin(User user){
-        return user != null && isUserLoginConcurrencyMax(user.getId());
-    }
-
     private boolean isUserLoginConcurrencyMax(String userId){
         return loginRepository.getConcurrentUserCount(userId) >= CONCURRENT_MAX;
     }
-
 
     @Override
     public Optional<User> registerUser(UserRegisterRequest request) {
