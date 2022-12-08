@@ -27,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .order(1)
                 .addPathPatterns("/post","/post/{*}/*");
         registry.addInterceptor(new BlockLoginUserInterceptor(userService))
-                .order(2)
+                .order(1)
                 .addPathPatterns("/user/login","/user/register");
     }
 }

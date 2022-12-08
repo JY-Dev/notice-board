@@ -68,7 +68,8 @@
 
             <div th:id="|${comment.getParentComment().id}-nested-reply|" style="display: none">
                 <div style="position:relative">
-                <textarea th:id="|${comment.getParentComment().id}-child-comment|" rows="5" cols="92" style="font-size: 18px; display: table" maxlength="50"
+                <textarea th:id="|${comment.getParentComment().id}-child-comment|" rows="5" cols="92"
+                          style="font-size: 18px; display: table" maxlength="50"
                           th:disabled="${user} == null"></textarea>
                     <div th:if="${user} == null" class="row m-2" style="position:absolute;left: 10px;top: 0px;">
                         <p th:text="#{login.after}"></p>
@@ -112,61 +113,42 @@
     function registerParentComment() {
         let content = $("#comment").val();
         if (content !== "") {
-            $.ajax({
-                type: 'post',           // 타입 (get, post, put 등등)
-                url: registerCommentUrl,           // 요청할 서버url
-                async: true,            // 비동기화 여부 (default : true)
-                headers: {              // Http header
-                    "Content-Type": "application/json"
-                },
-                dataType: 'text',       // 데이터 타입 (html, xml, json, text 등등)
-                data: JSON.stringify({  // 보낼 데이터 (Object , String, Array)
-                    "userId": "",
-                    "postId": postId,
-                    "parentId": -1,
-                    "content": content
-                }),
-                success: function (result) { // 결과 성공 콜백함수
-                    console.log(result);
-                    window.location = postUrl
-                },
-                error: function (request, status, error) { // 결과 에러 콜백함수
-                    console.log(error)
-                }
-            })
+            requestRegisterComment(content,-1);
         }
 
     }
 
     function registerChildComment(parentId) {
-        console.log(parentId);
-        let content = $('#'+parentId+'-child-comment').val();
+        let content = $('#' + parentId + '-child-comment').val();
         if (content !== "") {
-            $.ajax({
-                type: 'post',           // 타입 (get, post, put 등등)
-                url: registerCommentUrl,           // 요청할 서버url
-                async: true,            // 비동기화 여부 (default : true)
-                headers: {              // Http header
-                    "Content-Type": "application/json"
-                },
-                dataType: 'text',       // 데이터 타입 (html, xml, json, text 등등)
-                data: JSON.stringify({  // 보낼 데이터 (Object , String, Array)
-                    "userId": "",
-                    "postId": postId,
-                    "parentId": parentId,
-                    "content": content
-                }),
-                success: function (result) { // 결과 성공 콜백함수
-                    console.log(result);
-                    window.location = postUrl;
-                },
-                error: function (request, status, error) { // 결과 에러 콜백함수
-                    console.log(error);
-                }
-            })
+            requestRegisterComment(content,parentId);
         }
-
     }
+
+    function requestRegisterComment(content, parentId) {
+        $.ajax({
+            type: 'post',           // 타입 (get, post, put 등등)
+            url: registerCommentUrl,           // 요청할 서버url
+            async: true,            // 비동기화 여부 (default : true)
+            headers: {              // Http header
+                "Content-Type": "application/json"
+            },
+            dataType: 'text',       // 데이터 타입 (html, xml, json, text 등등)
+            data: JSON.stringify({  // 보낼 데이터 (Object , String, Array)
+                "userId": "",
+                "postId": postId,
+                "parentId": parentId,
+                "content": content
+            }),
+            success: function () { // 결과 성공 콜백함수
+                window.location = postUrl;
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        })
+    }
+
 
     function toggleNestedReply(parentId) {
         let nestedReplyId = '#' + parentId + '-nested-reply';
