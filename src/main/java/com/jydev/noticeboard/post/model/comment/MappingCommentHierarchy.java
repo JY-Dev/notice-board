@@ -9,5 +9,5 @@ import java.util.List;
 @AllArgsConstructor
 public class MappingCommentHierarchy {
     private Comment parentComment;
-    private List<Comment> childComment;
+    private List<Comment> childComments;
 }
