@@ -54,6 +54,10 @@ public class PostMockFactory {
         return new PostSearchRequest("",0,PostData.PAGE_POSTS_MAX_SIZE);
     }
 
+    public static PostSearchRequest makePostAllSearchRequest(int pageNum){
+        return new PostSearchRequest("",pageNum,PostData.pageSize);
+    }
+
     public static PostSearchRequest makePostKeywordSearchRequest(){
         return new PostSearchRequest(PostData.keyword,0,PostData.PAGE_POSTS_MAX_SIZE);
     }

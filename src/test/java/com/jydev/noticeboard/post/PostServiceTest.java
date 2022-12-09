@@ -5,6 +5,7 @@ import com.jydev.noticeboard.post.model.PagePost;
 import com.jydev.noticeboard.post.model.Post;
 import com.jydev.noticeboard.post.model.entity.PostEntity;
 import com.jydev.noticeboard.post.model.request.PostRequest;
+import com.jydev.noticeboard.post.model.request.PostSearchRequest;
 import com.jydev.noticeboard.post.service.PostService;
 import com.jydev.noticeboard.post.util.PostData;
 import com.jydev.noticeboard.post.util.PostDependency;
@@ -98,5 +99,16 @@ public class PostServiceTest {
         }
         List<PagePost> allResult = postService.findPagePosts(PostMockFactory.makePostLackSearchRequest());
         Assertions.assertThat(allResult.size()).isEqualTo(0);
+    }
+
+    @Test
+    public void getPageIndicatorTest(){
+        for (int i = 0; i < 100; i++) {
+            postService.registerPost(PostMockFactory.makePostRequest());
+        }
+        PostSearchRequest postSearchRequest = PostMockFactory.makePostAllSearchRequest(0);
+        List<PagePost> pagePosts = postService.findPagePosts(postSearchRequest);
+        List<Integer> pageIndicator = postService.getPageIndicator(postSearchRequest, pagePosts.size());
+        Assertions.assertThat(pageIndicator.size()).isEqualTo(PostService.indicatorSize);
     }
 }

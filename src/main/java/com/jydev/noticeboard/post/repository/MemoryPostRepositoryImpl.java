@@ -93,6 +93,11 @@ public class MemoryPostRepositoryImpl implements PostRepository {
         return Collections.emptyList();
     }
 
+    @Override
+    public int getTotalPostsSize() {
+        return storePost.size();
+    }
+
     private boolean isFilterKeyword(String keyword, String target){
         return keyword.isEmpty() || target.contains(keyword);
     }

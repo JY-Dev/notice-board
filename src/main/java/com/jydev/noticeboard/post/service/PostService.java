@@ -10,10 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostService {
+    static int indicatorSize = 6;
     Optional<Post> registerPost(PostRequest request);
     void deletePostById(Long postId);
     Optional<Post> getPost(Long postId);
     void updatePost(PostEditRequest request);
 
     List<PagePost> findPagePosts(PostSearchRequest request);
+
+    List<Integer> getPageIndicator(PostSearchRequest request, int pagePostsSize);
 }

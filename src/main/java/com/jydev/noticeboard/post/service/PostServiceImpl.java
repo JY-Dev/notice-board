@@ -14,6 +14,7 @@ import com.jydev.noticeboard.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -55,5 +56,44 @@ public class PostServiceImpl implements PostService{
     @Override
     public List<PagePost> findPagePosts(PostSearchRequest request) {
         return postRepository.findAllPost(request).stream().map(postMapper::toPagePost).toList();
+    }
+
+    @Override
+    public List<Integer> getPageIndicator(PostSearchRequest request, int pagePostsSize){
+        List<Integer> list = new ArrayList<>();
+        int totalPostsSize = postRepository.getTotalPostsSize();
+        int maxPage = totalPostsSize/ request.getPageSize()-1;
+        if(pagePostsSize < request.getPageSize()){
+            int pageNum = request.getPageNum();
+            if(pagePostsSize == 0)
+                pageNum-=1;
+            addPageIndicator(list,Math.min(pageNum,maxPage));
+
+        } else {
+            int remainPostCnt = totalPostsSize - request.getPageNum() * request.getPageSize();
+            int pageNum = request.getPageNum();
+            if(remainPostCnt == 0){
+                addPageIndicator(list,pageNum);
+            } else {
+                int pageWeight = remainPostCnt/request.getPageSize();
+                if(pageWeight == 0 && request.getPageNum() != 0)
+                    pageWeight = 1;
+                int center = indicatorSize / 2;
+                if(center < pageWeight)
+                    addPageIndicator(list,Math.max(pageNum+center,indicatorSize-1));
+                else
+                    addPageIndicator(list,pageNum+pageWeight);
+            }
+        }
+        return list;
+    }
+
+    private void addPageIndicator(List<Integer> list, int pageNum){
+        int pageCnt = 0;
+        while(pageNum>=0 && pageCnt < indicatorSize){
+            list.add(0,pageNum+1);
+            pageNum--;
+            pageCnt++;
+        }
     }
 }
