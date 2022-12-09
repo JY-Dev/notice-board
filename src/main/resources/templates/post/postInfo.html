@@ -65,10 +65,13 @@
                 </div>
             </div>
 
-            <div class="mt-3" th:text="${comment.getParentComment().content}"></div>
-            <div class="mt-1 d-flex justify-content-start">
+            <div class="mt-1 flex-row justify-content-start" th:text="${comment.getParentComment().content}"></div>
+            <div>
                 <button th:text="#{comment.write}" class="text-button" style="color : gray; font-size: small;"
                         th:onclick="|toggleNestedReply(${comment.getParentComment().id})|"></button>
+                <button th:text="#{delete}" class="text-button" style="color : gray; font-size: small;"
+                        th:if="${user != null && comment.getParentComment().user.id == user.id}"
+                         th:onclick="|deleteComment(${comment.getParentComment().id})|"></button>
             </div>
 
             <div th:id="|${comment.getParentComment().id}-nested-reply|" style="display: none">
@@ -102,7 +105,13 @@
                         </div>
                     </div>
                 </div>
-                <p class="mt-3" th:text="${childComment.content}"></p>
+                <div class="mt-3" th:text="${childComment.content}"></div>
+                <div>
+                    <button th:text="#{delete}" class="text-button" style="color : gray; font-size: small;"
+                            th:if="${user != null && childComment.user.id == user.id}"
+                            th:onclick="|deleteComment(${childComment.id})|"></button>
+                </div>
+
                 <div class="base-divider mt-4"></div>
             </li>
         </ul>
@@ -131,10 +140,15 @@
     }
 
     function deletePost(){
-        deleteAjaxRequest(postUrl,"")
+        deleteAjaxRequest(postUrl,"","/");
     }
 
-    function deleteAjaxRequest(url,data){
+    function deleteComment(commentId){
+        let url = registerCommentUrl+'/'+commentId;
+        deleteAjaxRequest(url,"",postUrl);
+    }
+
+    function deleteAjaxRequest(url,data,redirectUrl){
         $.ajax({
             type: 'delete',           // 타입 (get, post, put 등등)
             url: url,           // 요청할 서버url
@@ -145,7 +159,7 @@
             dataType: 'text',       // 데이터 타입 (html, xml, json, text 등등)
             data: data,
             success: function () { // 결과 성공 콜백함수
-                window.location = "/";
+                window.location = redirectUrl;
             },
             error: function (request, status, error) { // 결과 에러 콜백함수
                 console.log(error);

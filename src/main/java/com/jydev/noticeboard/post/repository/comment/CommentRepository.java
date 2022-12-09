@@ -10,4 +10,6 @@ public interface CommentRepository {
     List<CommentEntity> findCommentsByPostId(Long postId);
     CommentEntity saveComment(CommentRequest commentRequest, UserEntity userEntity);
     void deleteCommentById(Long commentId);
+
+    CommentEntity getCommentById(Long commentId);
 }

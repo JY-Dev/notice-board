@@ -44,4 +44,13 @@ public class CommentServiceImpl implements CommentService{
                 .map(commentMapper::toComment)
                 .map(parentComment -> commentMapper.toMappingCommentHierarchy(commentEntities,parentComment)).toList();
     }
+
+    @Override
+    public Optional<Comment> getComment(Long commentId) {
+        CommentEntity commentEntity = commentRepository.getCommentById(commentId);
+        if(commentEntity == null)
+            return Optional.empty();
+
+        return Optional.of(commentMapper.toComment(commentEntity));
+    }
 }

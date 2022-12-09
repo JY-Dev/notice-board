@@ -29,7 +29,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginCheckInterceptor(userService,httpResponseMapper,objectMapper))
                 .order(1)
-                .addPathPatterns("/post","/post/{*}/*");
+                .addPathPatterns("/post","/post/{*}/**");
         registry.addInterceptor(new BlockLoginUserInterceptor(userService))
                 .order(1)
                 .addPathPatterns("/user/login","/user/register");

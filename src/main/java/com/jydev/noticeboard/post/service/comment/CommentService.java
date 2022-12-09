@@ -11,4 +11,6 @@ public interface CommentService {
     Optional<Comment> registerComment(CommentRequest commentRequest);
     void deleteComment(Long commentId);
     List<MappingCommentHierarchy> getComments(Long postId);
+
+    Optional<Comment> getComment(Long commentId);
 }

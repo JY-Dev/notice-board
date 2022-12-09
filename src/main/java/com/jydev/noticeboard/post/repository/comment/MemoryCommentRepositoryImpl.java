@@ -14,13 +14,13 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequiredArgsConstructor
 @Repository
 public class MemoryCommentRepositoryImpl implements CommentRepository {
-    Map<Long, CommentEntity> map = new ConcurrentHashMap<>();
+    Map<Long, CommentEntity> commentStore = new ConcurrentHashMap<>();
 
     AtomicLong idCnt = new AtomicLong();
 
     @Override
     public List<CommentEntity> findCommentsByPostId(Long postId) {
-        return map.values().stream()
+        return commentStore.values().stream()
                 .filter(commentEntity -> commentEntity.getPostId().equals(postId))
                 .toList();
     }
@@ -31,12 +31,17 @@ public class MemoryCommentRepositoryImpl implements CommentRepository {
 
         CommentEntity commentEntity = new CommentEntity(userEntity,commentRequest.getPostId(),commentId
                 ,commentRequest.getParentId(),commentRequest.getContent(), LocalDateTime.now());
-        map.put(commentId,commentEntity);
+        commentStore.put(commentId,commentEntity);
         return commentEntity;
     }
 
     @Override
     public void deleteCommentById(Long commentId) {
-        map.remove(commentId);
+        commentStore.remove(commentId);
+    }
+
+    @Override
+    public CommentEntity getCommentById(Long commentId) {
+        return commentStore.get(commentId);
     }
 }
