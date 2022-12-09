@@ -1,6 +1,7 @@
 package com.jydev.noticeboard.post.model.request;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,9 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode
+@AllArgsConstructor
 public class PostEditRequest {
-    Long id;
+    private Long id;
     @NotBlank
-    String title;
-    String content;
+    private String title;
+    private String content;
 }

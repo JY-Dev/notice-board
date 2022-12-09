@@ -1,6 +1,8 @@
 package com.jydev.noticeboard.post;
 
+import com.jydev.noticeboard.post.mapper.PostMapper;
 import com.jydev.noticeboard.post.model.Post;
+import com.jydev.noticeboard.post.model.entity.PostEntity;
 import com.jydev.noticeboard.post.model.request.PostRequest;
 import com.jydev.noticeboard.post.service.PostService;
 import com.jydev.noticeboard.post.util.PostData;
@@ -12,11 +14,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.Optional;
 
 
 public class PostServiceTest {
     private final PostService postService = PostDependency.getPostService();
+    private final PostMapper postMapper = PostDependency.postMapper;
 
     @BeforeAll
     static void init(){
@@ -40,4 +44,16 @@ public class PostServiceTest {
         Assertions.assertThat(postService.getPost(PostData.postId).orElse(null)).isNull();
     }
 
+    @Test
+    public void editPostTest(){
+        postService.registerPost(PostMockFactory.makePostRequest());
+        PostEntity postEntity = PostMockFactory.makePostEntity();
+        postEntity.setTitle(PostData.changeTitle);
+        postEntity.setContent(PostData.changeContent);
+        Post editPost = postMapper.toPost(postEntity, Collections.emptyList());
+        postService.updatePost(PostMockFactory.makePostEditRequest());
+        Optional<Post> result = postService.getPost(PostData.postId);
+        Assertions.assertThat(result.orElse(null)).isEqualTo(editPost);
+
+    }
 }

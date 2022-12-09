@@ -3,6 +3,7 @@ package com.jydev.noticeboard.post.util;
 import com.jydev.noticeboard.post.model.Post;
 import com.jydev.noticeboard.post.model.PostUser;
 import com.jydev.noticeboard.post.model.entity.PostEntity;
+import com.jydev.noticeboard.post.model.request.PostEditRequest;
 import com.jydev.noticeboard.post.model.request.PostRequest;
 import com.jydev.noticeboard.user.util.UserData;
 import com.jydev.noticeboard.user.util.UserMockFactory;
@@ -19,6 +20,10 @@ public class PostMockFactory {
 
     public static PostEntity makePostEntity(){
         return new PostEntity(PostData.postId,"","",LocalDateTime.now(), UserMockFactory.makeUserEntity());
+    }
+
+    public static PostEditRequest makePostEditRequest(){
+        return new PostEditRequest(PostData.postId,PostData.changeTitle,PostData.changeContent);
     }
 
     public static PostRequest makePostRequest(){
