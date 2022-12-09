@@ -19,6 +19,7 @@
             <div class="mb-3">
               <label for="password" th:text="#{password}">UserId</label>
               <input type="password" class="form-control" id="password" th:errorclass="field-error" th:field="*{password}">
+              <div class="field-error form-text" th:errors="*{password}">아이디 오류</div>
             </div>
             <div th:if="${#fields.hasGlobalErrors()}">
               <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>

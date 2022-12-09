@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public LoginStatus login(String sessionId, String userId, String userPassword) {
         UserEntity userEntity = userRepository.findById(userId);
-        if(userEntity.getId().equals(userId) && !userPassword.equals(userEntity.getPassword()))
+        if(userEntity == null ||userEntity.getId().equals(userId) && !userPassword.equals(userEntity.getPassword()))
             return LoginStatus.INVALID;
         if(isUserLoginConcurrencyMax(userId))
             return LoginStatus.CONCURRENCY_MAX;

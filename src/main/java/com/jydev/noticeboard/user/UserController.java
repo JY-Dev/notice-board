@@ -51,7 +51,7 @@ public class UserController {
 
     @PostMapping("/login")
     public String userLogin(@Validated @ModelAttribute("userLoginForm") UserLoginRequest userLoginRequest, BindingResult bindingResult,
-                            HttpServletRequest request, @RequestParam("redirectURL") String redirectUrl){
+                            HttpServletRequest request, @RequestParam(value = "redirectURL",required = false) String redirectUrl){
         if(bindingResult.hasErrors()){
             return "user/login";
         }
