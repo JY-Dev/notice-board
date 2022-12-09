@@ -1,5 +1,7 @@
 package com.jydev.noticeboard;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jydev.noticeboard.http.HttpResponseMapper;
 import com.jydev.noticeboard.interceptor.LoginCheckInterceptor;
 import com.jydev.noticeboard.interceptor.BlockLoginUserInterceptor;
 import com.jydev.noticeboard.user.LoginUserMethodArgumentResolver;
@@ -16,6 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
     private final UserService userService;
+    private final HttpResponseMapper httpResponseMapper;
+    private final ObjectMapper objectMapper;
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(new LoginUserMethodArgumentResolver(userService));
@@ -23,7 +27,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new LoginCheckInterceptor(userService))
+        registry.addInterceptor(new LoginCheckInterceptor(userService,httpResponseMapper,objectMapper))
                 .order(1)
                 .addPathPatterns("/post","/post/{*}/*");
         registry.addInterceptor(new BlockLoginUserInterceptor(userService))
