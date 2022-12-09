@@ -5,6 +5,7 @@ import com.jydev.noticeboard.http.model.HttpResponse;
 import com.jydev.noticeboard.post.model.Post;
 import com.jydev.noticeboard.post.model.comment.Comment;
 import com.jydev.noticeboard.post.model.comment.request.CommentRequest;
+import com.jydev.noticeboard.post.model.request.PostEditRequest;
 import com.jydev.noticeboard.post.model.request.PostRequest;
 import com.jydev.noticeboard.post.service.PostService;
 import com.jydev.noticeboard.post.service.comment.CommentService;
@@ -81,6 +82,36 @@ public class PostController {
         return "post/postInfo";
     }
 
+    @GetMapping("/{postNumber}/edit")
+    public String editPostForm(@PathVariable Long postNumber,
+                               @ModelAttribute("postEditRequest") PostEditRequest postEditRequest, @AttributeLoginUser User user){
+        Optional<Post> post = postService.getPost(postNumber);
+        if(post.isEmpty())
+            return "redirect:/";
+        if(user == null || !post.get().getUser().getId().equals(user.getId())){
+            return "redirect:/post/"+postNumber;
+        }
+        postEditRequest.setId(postNumber);
+        postEditRequest.setContent(post.get().getContent());
+        postEditRequest.setTitle(post.get().getTitle());
+        return "post/postEditForm";
+    }
+
+    @PostMapping("/{postNumber}/edit")
+    public String editPost(@Validated @ModelAttribute("postEditRequest") PostEditRequest postEditRequest,
+                           @PathVariable Long postNumber, @AttributeLoginUser User user){
+        Optional<Post> post = postService.getPost(postNumber);
+        if(post.isEmpty())
+            return "redirect:/";
+
+        if(user != null && post.get().getUser().getId().equals(user.getId())){
+            postEditRequest.setId(postNumber);
+            postService.updatePost(postEditRequest);
+        }
+
+        return "redirect:/post/"+postNumber;
+    }
+
     @ResponseBody
     @PostMapping("/{postNumber}/comment")
     public ResponseEntity<HttpResponse<Comment>> registerComment(@PathVariable Long postNumber, @RequestBody CommentRequest commentRequest, @AttributeLoginUser User user){
@@ -91,5 +122,15 @@ public class PostController {
         return ResponseEntity.ok(response);
     }
 
+    @ResponseBody
+    @DeleteMapping("/{postNumber}/comment/{commentId}")
+    public ResponseEntity<HttpResponse<String>> deleteComment(@PathVariable Long postNumber,@PathVariable Long commentId,
+                                                              @AttributeLoginUser User user){
+        Optional<Comment> comment = commentService.getComment(commentId);
+        if(comment.isEmpty() || !comment.get().getUser().getId().equals(user.getId()))
+            return new ResponseEntity<>(httpResponseMapper.toHttpResponse(HttpStatus.BAD_REQUEST,""),HttpStatus.BAD_REQUEST);
+        commentService.deleteComment(commentId);
+        return ResponseEntity.ok(httpResponseMapper.toHttpResponse(HttpStatus.OK,""));
+    }
 
 }

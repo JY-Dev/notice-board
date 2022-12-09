@@ -1,6 +1,7 @@
 package com.jydev.noticeboard.post.repository;
 
 import com.jydev.noticeboard.post.model.entity.PostEntity;
+import com.jydev.noticeboard.post.model.request.PostEditRequest;
 import com.jydev.noticeboard.post.model.request.PostRequest;
 import com.jydev.noticeboard.user.model.Mapper.UserMapper;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
@@ -48,6 +49,18 @@ public class MemoryPostRepositoryImpl implements PostRepository {
     @Override
     public void deletePostById(Long postId) {
         storePost.remove(postId);
+    }
+
+    @Override
+    public PostEntity updatePost(PostEditRequest request) {
+        Long postId = request.getId();
+        PostEntity postEntity = storePost.get(postId);
+        if(postEntity == null)
+            return null;
+        postEntity.setContent(request.getContent());
+        postEntity.setTitle(request.getTitle());
+        storePost.put(postId,postEntity);
+        return postEntity;
     }
 
 }

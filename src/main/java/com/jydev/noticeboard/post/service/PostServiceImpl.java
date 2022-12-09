@@ -3,6 +3,7 @@ package com.jydev.noticeboard.post.service;
 import com.jydev.noticeboard.post.mapper.PostMapper;
 import com.jydev.noticeboard.post.model.Post;
 import com.jydev.noticeboard.post.model.comment.MappingCommentHierarchy;
+import com.jydev.noticeboard.post.model.request.PostEditRequest;
 import com.jydev.noticeboard.post.model.request.PostRequest;
 import com.jydev.noticeboard.post.repository.PostRepository;
 import com.jydev.noticeboard.post.service.comment.CommentService;
@@ -43,5 +44,10 @@ public class PostServiceImpl implements PostService{
         List<MappingCommentHierarchy> comments = commentService.getComments(postId);
         return Optional.ofNullable(postRepository.findPostById(postId))
                 .map(postEntity -> postMapper.toPost(postEntity,comments));
+    }
+
+    @Override
+    public void updatePost(PostEditRequest request) {
+        postRepository.updatePost(request);
     }
 }
