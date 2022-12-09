@@ -1,15 +1,16 @@
 package com.jydev.noticeboard.post.service;
 
 import com.jydev.noticeboard.post.mapper.PostMapper;
+import com.jydev.noticeboard.post.model.PagePost;
 import com.jydev.noticeboard.post.model.Post;
 import com.jydev.noticeboard.post.model.comment.MappingCommentHierarchy;
 import com.jydev.noticeboard.post.model.request.PostEditRequest;
 import com.jydev.noticeboard.post.model.request.PostRequest;
+import com.jydev.noticeboard.post.model.request.PostSearchRequest;
 import com.jydev.noticeboard.post.repository.PostRepository;
 import com.jydev.noticeboard.post.service.comment.CommentService;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
 import com.jydev.noticeboard.user.repository.UserRepository;
-import com.jydev.noticeboard.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -49,5 +50,10 @@ public class PostServiceImpl implements PostService{
     @Override
     public void updatePost(PostEditRequest request) {
         postRepository.updatePost(request);
+    }
+
+    @Override
+    public List<PagePost> findPagePosts(PostSearchRequest request) {
+        return postRepository.findAllPost(request).stream().map(postMapper::toPagePost).toList();
     }
 }

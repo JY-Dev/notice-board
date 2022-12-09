@@ -18,10 +18,7 @@ public class PostDependency {
     public static CommentMapper commentMapper = new CommentMapper();
 
     public static final UserRepository userRepository = UserDependency.getUserRepository();
-
-    public static PostRepository getPostRepository(){
-        return new MemoryPostRepositoryImpl(UserDependency.userMapper);
-    }
+    public static final PostRepository postRepository = new MemoryPostRepositoryImpl(UserDependency.userMapper);
 
     public static CommentRepository getCommentRepository(){
         return new MemoryCommentRepositoryImpl();
@@ -31,6 +28,6 @@ public class PostDependency {
     }
 
     public static PostService getPostService(){
-        return new PostServiceImpl(getPostRepository(),userRepository,getCommentService(),postMapper);
+        return new PostServiceImpl(postRepository,userRepository,getCommentService(),postMapper);
     }
 }
