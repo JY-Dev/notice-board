@@ -76,10 +76,10 @@ public class MemoryPostRepositoryImpl implements PostRepository {
 
     @Override
     public List<PostEntity> findAllPost(PostSearchRequest request) {
-        int pageNum = request.getPageNum();
+        int pageNumWeight = Math.max(request.getPageNum()-1,0);
         int pageSize = request.getPageSize();
         String keyword = request.getKeyword();
-        int startIndex = pageNum*pageSize;
+        int startIndex = pageNumWeight*pageSize;
         int lastIndex = startIndex+pageSize;
         List<PostEntity> filterList = storePost.values().stream()
                 .filter(postEntity -> isFilterKeyword(keyword,postEntity.getTitle()))

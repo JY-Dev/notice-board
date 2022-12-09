@@ -106,9 +106,23 @@ public class PostServiceTest {
         for (int i = 0; i < 100; i++) {
             postService.registerPost(PostMockFactory.makePostRequest());
         }
-        PostSearchRequest postSearchRequest = PostMockFactory.makePostAllSearchRequest(0);
+        PostSearchRequest postSearchRequest = PostMockFactory.makePostAllSearchRequest(3);
         List<PagePost> pagePosts = postService.findPagePosts(postSearchRequest);
         List<Integer> pageIndicator = postService.getPageIndicator(postSearchRequest, pagePosts.size());
+        for (Integer integer : pageIndicator) {
+            System.out.println(integer);
+        }
         Assertions.assertThat(pageIndicator.size()).isEqualTo(PostService.indicatorSize);
+    }
+
+    @Test
+    public void getPageIndicatorLackIndicatorSizeTest(){
+        for (int i = 0; i < 5; i++) {
+            postService.registerPost(PostMockFactory.makePostRequest());
+        }
+        PostSearchRequest postSearchRequest = PostMockFactory.makePostAllSearchRequest(1);
+        List<PagePost> pagePosts = postService.findPagePosts(postSearchRequest);
+        List<Integer> pageIndicator = postService.getPageIndicator(postSearchRequest, pagePosts.size());
+        Assertions.assertThat(pageIndicator.size()).isEqualTo(1);
     }
 }

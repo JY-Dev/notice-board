@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostService {
-    static int indicatorSize = 6;
+    static int indicatorSize = 5;
     Optional<Post> registerPost(PostRequest request);
     void deletePostById(Long postId);
     Optional<Post> getPost(Long postId);

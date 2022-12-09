@@ -2,11 +2,13 @@ package com.jydev.noticeboard.post;
 
 import com.jydev.noticeboard.http.HttpResponseMapper;
 import com.jydev.noticeboard.http.model.HttpResponse;
+import com.jydev.noticeboard.post.model.PagePost;
 import com.jydev.noticeboard.post.model.Post;
 import com.jydev.noticeboard.post.model.comment.Comment;
 import com.jydev.noticeboard.post.model.comment.request.CommentRequest;
 import com.jydev.noticeboard.post.model.request.PostEditRequest;
 import com.jydev.noticeboard.post.model.request.PostRequest;
+import com.jydev.noticeboard.post.model.request.PostSearchRequest;
 import com.jydev.noticeboard.post.service.PostService;
 import com.jydev.noticeboard.post.service.comment.CommentService;
 import com.jydev.noticeboard.user.AttributeLoginUser;
@@ -21,6 +23,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -35,8 +39,11 @@ public class PostController {
     private final HttpResponseMapper httpResponseMapper;
 
     @GetMapping("/page")
-    public String getPage(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
-
+    public String getPage(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum,
+                          @RequestParam(value = "keyword",defaultValue = "") String keyword) {
+        PostSearchRequest postSearchRequest = new PostSearchRequest(keyword, pageNum, 10);
+        List<PagePost> pagePosts = postService.findPagePosts(postSearchRequest);
+        postService.getPageIndicator(postSearchRequest,pagePosts.size());
         return "index";
     }
 

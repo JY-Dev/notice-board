@@ -62,36 +62,32 @@ public class PostServiceImpl implements PostService{
     public List<Integer> getPageIndicator(PostSearchRequest request, int pagePostsSize){
         List<Integer> list = new ArrayList<>();
         int totalPostsSize = postRepository.getTotalPostsSize();
-        int maxPage = totalPostsSize/ request.getPageSize()-1;
+        int maxPageNumber = calculatePageNumber(totalPostsSize/request.getPageSize(),totalPostsSize%request.getPageSize());
         if(pagePostsSize < request.getPageSize()){
-            int pageNum = request.getPageNum();
-            if(pagePostsSize == 0)
-                pageNum-=1;
-            addPageIndicator(list,Math.min(pageNum,maxPage));
-
+            addPageIndicator(list,maxPageNumber);
         } else {
-            int remainPostCnt = totalPostsSize - request.getPageNum() * request.getPageSize();
             int pageNum = request.getPageNum();
-            if(remainPostCnt == 0){
-                addPageIndicator(list,pageNum);
-            } else {
-                int pageWeight = remainPostCnt/request.getPageSize();
-                if(pageWeight == 0 && request.getPageNum() != 0)
-                    pageWeight = 1;
-                int center = indicatorSize / 2;
-                if(center < pageWeight)
-                    addPageIndicator(list,Math.max(pageNum+center,indicatorSize-1));
-                else
-                    addPageIndicator(list,pageNum+pageWeight);
-            }
+            int remainPostCnt = totalPostsSize - pageNum * request.getPageSize();
+            int pageWeight = calculatePageNumber(remainPostCnt/request.getPageSize(),remainPostCnt%request.getPageSize());
+            int center = indicatorSize / 2;
+            if(center < pageWeight)
+                addPageIndicator(list,Math.max(pageNum+center,indicatorSize));
+            else
+                addPageIndicator(list,pageNum+pageWeight);
         }
         return list;
     }
 
+    private int calculatePageNumber(int pageNumber, int remainPosts){
+        if(remainPosts > 0)
+            return pageNumber+1;
+        return pageNumber;
+    }
+
     private void addPageIndicator(List<Integer> list, int pageNum){
         int pageCnt = 0;
-        while(pageNum>=0 && pageCnt < indicatorSize){
-            list.add(0,pageNum+1);
+        while(pageNum>0 && pageCnt < indicatorSize){
+            list.add(0,pageNum);
             pageNum--;
             pageCnt++;
         }
