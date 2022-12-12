@@ -71,7 +71,7 @@ public class PostServiceTest {
         for (int i = 0; i < PostData.PAGE_POSTS_MAX_SIZE; i++) {
             postService.registerPost(PostMockFactory.makePostRequest());
         }
-        List<PagePost> data = PostMockFactory.makePagePosts();
+        List<PagePost> data = PostMockFactory.makePagePosts().stream().sorted((one,two) -> two.getId().compareTo(one.getId())).toList();
         List<PagePost> result = postService.findPagePosts(PostMockFactory.makePostAllSearchRequest());
         Assertions.assertThat(data).isEqualTo(result);
     }

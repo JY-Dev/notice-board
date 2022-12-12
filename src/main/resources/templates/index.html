@@ -33,6 +33,13 @@
         <div class="mt-3 d-flex justify-content-end">
             <button class="btn btn-primary" th:onclick="writePost()" th:text="#{post.write}"></button>
         </div>
+
+        <div class="input-group mb-3 d-flex justify-content-center">
+            <input type="text" id="search-input">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" th:onclick="searchPost()" th:text="#{search}"></button>
+            </div>
+        </div>
         <div class="btn-group mt-3 d-flex justify-content-center" role="group" aria-label="First group">
             <button th:each="pageNumber:${pageIndicator}" th:text="${pageNumber}" th:classappend="${(#strings.equals(#strings.toString(pageNumber),#strings.isEmpty(param.pageNum) ? '1' : param.pageNum)) ? 'indicator-select' : 'indicator'}"
                     type="button" th:onclick="|pageChange(${pageNumber})|"
@@ -44,8 +51,14 @@
 
 </body>
 <script th:inline="javascript">
+
+    let currentKeyword = [[${param.keyword}]];
+    function searchPost(){
+        let keyword = $('#search-input').val()
+        window.location.href = '/post/page?keyword='+keyword
+    }
     function pageChange(pageNum) {
-        window.location.href = '/post/page?pageNum=' + pageNum;
+        window.location.href = '/post/page?pageNum=' + pageNum+'&keyword='+currentKeyword;
     }
 
     function writePost(){

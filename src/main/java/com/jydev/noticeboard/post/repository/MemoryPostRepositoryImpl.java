@@ -95,8 +95,8 @@ public class MemoryPostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public int getTotalPostsSize() {
-        return storePost.size();
+    public int getTotalPostsSize(PostSearchRequest request) {
+        return (int) storePost.values().stream().filter(post -> isFilterKeyword(request.getKeyword(),post.getTitle())).count();
     }
 
     private boolean isFilterKeyword(String keyword, String target){

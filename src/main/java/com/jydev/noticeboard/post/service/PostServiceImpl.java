@@ -61,7 +61,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public List<Integer> getPageIndicator(PostSearchRequest request, int pagePostsSize){
         List<Integer> list = new ArrayList<>();
-        int totalPostsSize = postRepository.getTotalPostsSize();
+        int totalPostsSize = postRepository.getTotalPostsSize(request);
         int maxPageNumber = calculatePageNumber(totalPostsSize/request.getPageSize(),totalPostsSize%request.getPageSize());
         if(pagePostsSize < request.getPageSize()){
             addPageIndicator(list,maxPageNumber);
@@ -70,8 +70,8 @@ public class PostServiceImpl implements PostService{
             int remainPostCnt = totalPostsSize - pageNum * request.getPageSize();
             int pageWeight = calculatePageNumber(remainPostCnt/request.getPageSize(),remainPostCnt%request.getPageSize());
             int center = indicatorSize / 2;
-            if(center < pageWeight)
-                addPageIndicator(list,Math.max(pageNum+center,indicatorSize));
+            if(pageNum + pageWeight > indicatorSize)
+                addPageIndicator(list,Math.max(Math.min(pageNum+center,maxPageNumber),indicatorSize));
             else
                 addPageIndicator(list,pageNum+pageWeight);
         }
