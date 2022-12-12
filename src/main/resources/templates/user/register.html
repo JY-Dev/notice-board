@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragment/base_head.html :: base_head(~{::title})">
+    <title th:text="#{register}">Title</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-9 col-lg-7 mx-auto">
+            <div class="card border-primary shadow rounded-3 my-5">
+                <div class="p-4 p-sm-5">
+                    <h1 class="card-title text-center mb-5 fw-light fs-5" th:text="#{register}"></h1>
+                    <form th:object="${userRegisterForm}" method="post">
+                        <div class="mb-3">
+                            <label for="nickname" th:text="#{nickname}">Nickname</label>
+                            <input type="text" class="form-control" id="nickname" th:field="*{nickname}" th:errorclass="field-error">
+                            <div class="field-error form-text" th:errors="*{nickname}">닉네임 오류</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" th:text="#{email}">Email address</label>
+                            <input type="email" class="form-control" id="email" th:field="*{email}" th:errorclass="field-error" placeholder="name@example.com">
+                            <div class="field-error form-text" th:errors="*{email}">이메일 오류</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id" th:text="#{id}">UserId</label>
+                            <input type="text" class="form-control" id="id" th:errorclass="field-error" th:field="*{id}">
+                            <div class="field-error form-text" th:errors="*{id}">아이디 오류</div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label for="password" th:text="#{password}">Password</label>
+                                    <input type="password" class="form-control" th:field="*{password}" th:errorclass="field-error" id="password" th:placeholder="#{password}">
+                                </div>
+                                <div class="col-6">
+                                    <label for="confirmPassword" th:text="#{password.confirm}">Confirm Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword" th:errorclass="field-error" th:field="*{confirmPassword}" th:placeholder="#{password.confirm}">
+                                </div>
+                            </div>
+                            <div class="field-error form-text" th:errors="*{password}">비밀번호 오류</div>
+                        </div>
+
+
+                        <div class="mt-5">
+                            <button class="w-100 btn btn-primary text-uppercase" type="submit" th:text="#{register}">회원가입</button>
+                        </div>
+
+                        <div class="mt-2 d-flex justify-content-center row">
+                            <p class="mr-2">이미 가입한 적이 있다면</p>
+                            <a class="" th:href="@{login}">로그인</a>
+                        </div>
+
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>
