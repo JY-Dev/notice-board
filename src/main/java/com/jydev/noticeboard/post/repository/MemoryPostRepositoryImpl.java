@@ -22,7 +22,7 @@ public class MemoryPostRepositoryImpl implements PostRepository {
     public MemoryPostRepositoryImpl(UserMapper userMapper){
         String[] titleArr = {"고양이","강아지","바다","강사","고라니","강바다씨","코끼리","고구마","고사리"};
         List<String> titleList = Arrays.asList(titleArr);
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 100; i++) {
             long postId = idCnt.getAndAdd(1);
             Collections.shuffle(titleList);
             PostRequest postRequest = new PostRequest(titleList.get(0),"컨텐츠","1234");
@@ -83,6 +83,7 @@ public class MemoryPostRepositoryImpl implements PostRepository {
         int lastIndex = startIndex+pageSize;
         List<PostEntity> filterList = storePost.values().stream()
                 .filter(postEntity -> isFilterKeyword(keyword,postEntity.getTitle()))
+                .sorted((one,two) -> two.getId().compareTo(one.getId()))
                 .toList();
         if(filterList.size() > startIndex){
             if(filterList.size() > lastIndex)

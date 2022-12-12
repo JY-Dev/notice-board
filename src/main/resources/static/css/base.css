@@ -22,3 +22,12 @@
     border: none;
     outline: none;
 }
+.indicator-select{
+    outline: black;
+    border:2px solid black;
+}
+
+.indicator{
+    outline: skyblue;
+    border:2px solid skyblue;
+}

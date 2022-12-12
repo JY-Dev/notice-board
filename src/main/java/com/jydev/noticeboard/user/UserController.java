@@ -65,7 +65,7 @@ public class UserController {
             return "user/login";
         }
         String returnUrl = "redirect:";
-        if(!redirectUrl.isEmpty()){
+        if(redirectUrl != null){
             returnUrl+=redirectUrl;
         } else
             returnUrl+="/";
