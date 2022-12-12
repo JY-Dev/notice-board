@@ -33,6 +33,7 @@
                     th:onclick="editPost()"></button>
             <button class="btn btn-primary text-uppercase ml-2" th:text="#{delete}" th:if="${user != null && post.user.id == user.id}"
                     th:onclick="deletePost()"></button>
+            <button class="btn btn-primary ml-2" th:text="#{post.list}" th:onclick="|location.href='/post/page'|"></button>
         </div>
 
         <div class="base-divider mt-5 mb-3"></div>
@@ -45,7 +46,7 @@
                 <a th:href="|/user/login?redirectURL=/post/${postNumber}|" th:text="#{login}" class="ml-1"></a>
             </div>
         </div>
-        <div class="d-flex justify-content-end mt-2">
+        <div class="d-flex justify-content-end mt-2 mb-3">
             <button class="btn btn-primary text-uppercase" th:text="#{comment.register}"
                     th:onclick="registerParentComment()"></button>
         </div>
