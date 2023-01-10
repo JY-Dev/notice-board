@@ -1,24 +1,31 @@
 package com.jydev.noticeboard.user.model.entity;
 
 import com.jydev.noticeboard.user.model.UserRole;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "user")
 public class UserEntity {
+    @Id
+    @Column(name = "user_id")
+    private String id;
     private String profileImageUrl;
     private String email;
     private String nickname;
-    private String id;
     private String password;
+    @Enumerated(value = EnumType.STRING)
     private UserRole role;
+    @CreatedDate
     private LocalDateTime createdDateTime;
 
     @Override

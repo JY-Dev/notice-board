@@ -9,12 +9,14 @@ import com.jydev.noticeboard.user.repository.LoginRepository;
 import com.jydev.noticeboard.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final LoginRepository loginRepository;
@@ -56,7 +58,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Optional<User> registerUser(UserRegisterRequest request) {
-        return Optional.ofNullable(userRepository.saveUser(request))
+        UserEntity user = userRepository.saveUser(request);
+        return Optional.ofNullable(user)
                 .map(userMapper::toUser);
     }
 

@@ -20,7 +20,14 @@ public class UserMockFactory {
     }
 
     public static UserEntity makeUserEntity(){
-        return new UserEntity(UserData.profileImageUrl,UserData.email,UserData.nickname,UserData.userId,UserData.userPw, UserRole.COMMON, LocalDateTime.now());
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(UserData.userId);
+        userEntity.setPassword(UserData.userPw);
+        userEntity.setProfileImageUrl(UserData.profileImageUrl);
+        userEntity.setRole(UserRole.COMMON);
+        userEntity.setEmail(UserData.email);
+        userEntity.setNickname(UserData.nickname);
+        return userEntity;
     }
 
     public static User makeUser(){

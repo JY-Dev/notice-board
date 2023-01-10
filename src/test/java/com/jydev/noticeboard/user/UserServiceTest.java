@@ -4,39 +4,42 @@ import com.jydev.noticeboard.user.model.User;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
 import com.jydev.noticeboard.user.service.UserService;
 import com.jydev.noticeboard.user.util.UserData;
-import com.jydev.noticeboard.user.util.UserDependency;
 import com.jydev.noticeboard.user.util.UserMockFactory;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@SpringBootTest
+@Transactional
 public class UserServiceTest {
+
+    @Autowired
     private UserService userService;
-    @BeforeEach
-    void init(){
-        userService = UserDependency.getUserService();
-    }
 
     @Test
     void registerUserTest(){
-        registerUser();
+        UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest();
+        userService.registerUser(request);
         Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(2);
     }
 
     @Test
     void registerUserConflictTest(){
-        registerUser();
+        UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest();
+        userService.registerUser(request);
         Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(2);
-        UserMockFactory.makeUserRegisterRequest();
-        registerUser();
-        Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(2);
+        org.junit.jupiter.api.Assertions.assertThrows(DataIntegrityViolationException.class,() -> userService.registerUser(request));
     }
 
     @Test
     void deleteUserTest(){
-        registerUser();
+        UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest();
+        userService.registerUser(request);
         Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(2);
         userService.deleteUser(UserData.userId);
         Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(1);
@@ -44,15 +47,13 @@ public class UserServiceTest {
 
     @Test
     void getLoginUserByIdTest(){
-        registerUser();
+        UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest();
+        userService.registerUser(request);
         userService.login(UserData.sessionId,UserData.userId,UserData.userPw);
         Optional<User> result = userService.getLoginUser(UserData.sessionId);
         User user = UserMockFactory.makeUser();
         Assertions.assertThat(result.orElse(null)).isEqualTo(user);
     }
 
-    void registerUser(){
-        UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest();
-        userService.registerUser(request);
-    }
+
 }

@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Repository
+//@Repository
 public class MemoryUserRepository implements UserRepository {
     private final UserMapper userMapper;
     private final Map<String, UserEntity> userStore = new ConcurrentHashMap<>();
