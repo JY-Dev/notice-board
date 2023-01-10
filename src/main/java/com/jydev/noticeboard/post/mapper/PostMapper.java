@@ -15,8 +15,8 @@ public class PostMapper {
     public Post toPost(PostEntity postEntity, List<MappingCommentHierarchy> comments) {
         int commentsSize = (int) comments.stream().map(MappingCommentHierarchy::getChildComments)
                 .filter(childComments -> !childComments.isEmpty()).count() + comments.size();
-        return new Post(postEntity.getId(), toPostUser(postEntity.getRegisterUser()),
-                postEntity.getTitle(), postEntity.getContent(), postEntity.getRegisterDateTime(), commentsSize, comments);
+        return new Post(postEntity.getId(), toPostUser(postEntity.getUser()),
+                postEntity.getTitle(), postEntity.getContent(), postEntity.getCreatedDateTime(), commentsSize, comments);
     }
 
     public PostUser toPostUser(UserEntity userEntity) {
@@ -24,7 +24,7 @@ public class PostMapper {
     }
 
     public PagePost toPagePost(PostEntity postEntity) {
-        return new PagePost(postEntity.getId(), toPostUser(postEntity.getRegisterUser()),
-                postEntity.getTitle(), postEntity.getContent(), postEntity.getRegisterDateTime());
+        return new PagePost(postEntity.getId(), toPostUser(postEntity.getUser()),
+                postEntity.getTitle(), postEntity.getContent(), postEntity.getCreatedDateTime());
     }
 }

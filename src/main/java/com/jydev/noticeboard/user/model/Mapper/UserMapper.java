@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 @RequiredArgsConstructor
 @Component
 public class UserMapper {
@@ -18,7 +20,7 @@ public class UserMapper {
     @Value("${default.file.image}")
     private String defaultImageFileName;
     public UserEntity toEntity(UserRegisterRequest request){
-        return new UserEntity(fileSystem.getHttpProtocolUrl(defaultImageFileName, FileType.IMAGE), request.getEmail(),request.getNickname(),request.getId(),request.getPassword(), UserRole.COMMON);
+        return new UserEntity(fileSystem.getHttpProtocolUrl(defaultImageFileName, FileType.IMAGE), request.getEmail(),request.getNickname(),request.getId(),request.getPassword(), UserRole.COMMON, LocalDateTime.now());
     }
     public User toUser(UserEntity userEntity){
         return new User(userEntity.getProfileImageUrl(),userEntity.getEmail(),userEntity.getNickname(),userEntity.getId(),userEntity.getRole());

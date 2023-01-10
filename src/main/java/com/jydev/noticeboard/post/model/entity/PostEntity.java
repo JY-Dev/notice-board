@@ -15,19 +15,19 @@ public class PostEntity {
     private Long id;
     private String title;
     private String content;
-    private LocalDateTime registerDateTime;
-    private UserEntity registerUser;
+    private LocalDateTime createdDateTime;
+    private UserEntity user;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PostEntity that = (PostEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(registerUser, that.registerUser);
+        return Objects.equals(id, that.id) && Objects.equals(user, that.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, registerUser);
+        return Objects.hash(id, user);
     }
 }
