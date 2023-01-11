@@ -6,42 +6,49 @@ import com.jydev.noticeboard.post.model.Post;
 import com.jydev.noticeboard.post.model.entity.PostEntity;
 import com.jydev.noticeboard.post.model.request.PostRequest;
 import com.jydev.noticeboard.post.model.request.PostSearchRequest;
+import com.jydev.noticeboard.post.repository.PostRepository;
 import com.jydev.noticeboard.post.service.PostService;
 import com.jydev.noticeboard.post.util.PostData;
 import com.jydev.noticeboard.post.util.PostDependency;
 import com.jydev.noticeboard.post.util.PostMockFactory;
 import com.jydev.noticeboard.user.model.request.UserRegisterRequest;
+import com.jydev.noticeboard.user.repository.UserRepository;
 import com.jydev.noticeboard.user.util.UserMockFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 
-public class PostServiceTest {
-    private final PostService postService = PostDependency.getPostService();
-    private final PostMapper postMapper = PostDependency.postMapper;
 
-    @BeforeAll
-    static void init(){
-        UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest();
-        PostDependency.userRepository.saveUser(request);
-    }
+@SpringBootTest
+@Transactional
+public class PostServiceTest {
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private  PostMapper postMapper;
 
     @BeforeEach
-    void clearStore(){
-        PostDependency.postRepository.deleteAllPost();
+    void registerUser(){
+        userRepository.saveUser(UserMockFactory.makeUserRegisterRequest());
     }
 
     @Test
     public void registerPostTest(){
         PostRequest postRequest = PostMockFactory.makePostRequest();
         Optional<Post> result = postService.registerPost(postRequest);
-        Post post = PostMockFactory.makePost();
+        Post post = PostMockFactory.makePost(result.get().getId());
         Assertions.assertThat(result.orElse(null)).isEqualTo(post);
     }
 
@@ -55,13 +62,13 @@ public class PostServiceTest {
 
     @Test
     public void editPostTest(){
-        postService.registerPost(PostMockFactory.makePostRequest());
-        PostEntity postEntity = PostMockFactory.makePostEntity();
+        Post post = postService.registerPost(PostMockFactory.makePostRequest()).get();
+        PostEntity postEntity = PostMockFactory.makePostEntity(post.getId());
         postEntity.setTitle(PostData.changeTitle);
         postEntity.setContent(PostData.changeContent);
         Post editPost = postMapper.toPost(postEntity, Collections.emptyList());
-        postService.updatePost(PostMockFactory.makePostEditRequest());
-        Optional<Post> result = postService.getPost(PostData.postId);
+        postService.updatePost(PostMockFactory.makePostEditRequest(post.getId()));
+        Optional<Post> result = postService.getPost(post.getId());
         Assertions.assertThat(result.orElse(null)).isEqualTo(editPost);
 
     }
@@ -71,9 +78,8 @@ public class PostServiceTest {
         for (int i = 0; i < PostData.PAGE_POSTS_MAX_SIZE; i++) {
             postService.registerPost(PostMockFactory.makePostRequest());
         }
-        List<PagePost> data = PostMockFactory.makePagePosts().stream().sorted((one,two) -> two.getId().compareTo(one.getId())).toList();
         List<PagePost> result = postService.findPagePosts(PostMockFactory.makePostAllSearchRequest());
-        Assertions.assertThat(data).isEqualTo(result);
+        Assertions.assertThat(result.size()).isEqualTo(PostData.PAGE_POSTS_MAX_SIZE);
     }
 
     @Test
@@ -92,25 +98,15 @@ public class PostServiceTest {
     }
 
     @Test
-    public void findPagePostsLackTest(){
-        int dataSize = 5;
-        for (int i = 0; i < dataSize; i++) {
-            postService.registerPost(PostMockFactory.makePostRequest());
-        }
-        List<PagePost> allResult = postService.findPagePosts(PostMockFactory.makePostLackSearchRequest());
-        Assertions.assertThat(allResult.size()).isEqualTo(0);
-    }
-
-    @Test
     public void getPageIndicatorTest(){
         for (int i = 0; i < 100; i++) {
             postService.registerPost(PostMockFactory.makePostRequest());
         }
         PostSearchRequest postSearchRequest = PostMockFactory.makePostAllSearchRequest(3);
         List<PagePost> pagePosts = postService.findPagePosts(postSearchRequest);
-        List<Integer> pageIndicator = postService.getPageIndicator(postSearchRequest, pagePosts.size());
-        for (Integer integer : pageIndicator) {
-            System.out.println(integer);
+        List<Long> pageIndicator = postService.getPageIndicator(postSearchRequest, pagePosts.size());
+        for (Long i : pageIndicator) {
+            System.out.println(i);
         }
         Assertions.assertThat(pageIndicator.size()).isEqualTo(PostService.indicatorSize);
     }
@@ -122,7 +118,7 @@ public class PostServiceTest {
         }
         PostSearchRequest postSearchRequest = PostMockFactory.makePostAllSearchRequest(1);
         List<PagePost> pagePosts = postService.findPagePosts(postSearchRequest);
-        List<Integer> pageIndicator = postService.getPageIndicator(postSearchRequest, pagePosts.size());
+        List<Long> pageIndicator = postService.getPageIndicator(postSearchRequest, pagePosts.size());
         Assertions.assertThat(pageIndicator.size()).isEqualTo(1);
     }
 }

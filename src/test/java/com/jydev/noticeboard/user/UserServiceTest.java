@@ -25,14 +25,14 @@ public class UserServiceTest {
     void registerUserTest(){
         UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest();
         userService.registerUser(request);
-        Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(2);
+        Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(1);
     }
 
     @Test
     void registerUserConflictTest(){
         UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest();
         userService.registerUser(request);
-        Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(2);
+        Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(1);
         org.junit.jupiter.api.Assertions.assertThrows(DataIntegrityViolationException.class,() -> userService.registerUser(request));
     }
 
@@ -40,9 +40,9 @@ public class UserServiceTest {
     void deleteUserTest(){
         UserRegisterRequest request = UserMockFactory.makeUserRegisterRequest();
         userService.registerUser(request);
-        Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(2);
-        userService.deleteUser(UserData.userId);
         Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(1);
+        userService.deleteUser(UserData.userId);
+        Assertions.assertThat(userService.getRegisterUsers().size()).isEqualTo(0);
     }
 
     @Test

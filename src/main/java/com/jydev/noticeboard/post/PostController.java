@@ -43,7 +43,7 @@ public class PostController {
                           @RequestParam(value = "keyword",defaultValue = "") String keyword, Model model, @AttributeLoginUser User user) {
         PostSearchRequest postSearchRequest = new PostSearchRequest(keyword, pageNum, 10);
         List<PagePost> pagePosts = postService.findPagePosts(postSearchRequest);
-        List<Integer> pageIndicator = postService.getPageIndicator(postSearchRequest, pagePosts.size());
+        List<Long> pageIndicator = postService.getPageIndicator(postSearchRequest, pagePosts.size());
         model.addAttribute("posts",pagePosts);
         model.addAttribute("pageIndicator",pageIndicator);
         return "index";

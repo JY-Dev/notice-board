@@ -22,12 +22,22 @@ public class PostMockFactory {
         return new Post(PostData.postId,makePostUser(),PostData.title,"", LocalDateTime.now(),0, Collections.emptyList());
     }
 
-    public static PostEntity makePostEntity(){
-        return new PostEntity(PostData.postId,PostData.title,"",LocalDateTime.now(), UserMockFactory.makeUserEntity());
+    public static Post makePost(Long postId){
+        return new Post(postId,makePostUser(),PostData.title,"", LocalDateTime.now(),0, Collections.emptyList());
     }
 
-    public static PostEditRequest makePostEditRequest(){
-        return new PostEditRequest(PostData.postId,PostData.changeTitle,PostData.changeContent);
+    public static PostEntity makePostEntity(Long postId){
+        PostEntity postEntity = new PostEntity();
+        postEntity.setId(postId);
+        postEntity.setTitle(PostData.title);
+        postEntity.setContent("");
+        postEntity.setCreatedDateTime(LocalDateTime.now());
+        postEntity.setUser(UserMockFactory.makeUserEntity());
+        return postEntity;
+    }
+
+    public static PostEditRequest makePostEditRequest(Long postId){
+        return new PostEditRequest(postId,PostData.changeTitle,PostData.changeContent);
     }
 
     public static PostRequest makePostRequest(){

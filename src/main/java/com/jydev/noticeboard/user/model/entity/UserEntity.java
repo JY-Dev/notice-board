@@ -14,7 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "user")
+@Table(name = "users")
 public class UserEntity {
     @Id
     @Column(name = "user_id")

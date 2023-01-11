@@ -1,7 +1,7 @@
 package com.jydev.noticeboard.post.util;
 
 public class PostData {
-    public static final Long postId = 0L;
+    public static final Long postId = 1L;
     public static final int PAGE_POSTS_MAX_SIZE = 100;
 
     public static final int pageSize = 10;

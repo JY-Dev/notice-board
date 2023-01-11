@@ -18,5 +18,5 @@ public interface PostService {
 
     List<PagePost> findPagePosts(PostSearchRequest request);
 
-    List<Integer> getPageIndicator(PostSearchRequest request, int pagePostsSize);
+    List<Long> getPageIndicator(PostSearchRequest request, int pagePostsSize);
 }

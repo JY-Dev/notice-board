@@ -13,6 +13,7 @@ import com.jydev.noticeboard.user.model.entity.UserEntity;
 import com.jydev.noticeboard.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
@@ -59,16 +61,16 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Integer> getPageIndicator(PostSearchRequest request, int pagePostsSize){
-        List<Integer> list = new ArrayList<>();
-        int totalPostsSize = postRepository.getTotalPostsSize(request);
-        int maxPageNumber = calculatePageNumber(totalPostsSize/request.getPageSize(),totalPostsSize%request.getPageSize());
+    public List<Long> getPageIndicator(PostSearchRequest request, int pagePostsSize){
+        List<Long> list = new ArrayList<>();
+        Long totalPostsSize = postRepository.getTotalPostsSize(request);
+        long maxPageNumber = calculatePageNumber(totalPostsSize/request.getPageSize(),totalPostsSize%request.getPageSize());
         if(pagePostsSize < request.getPageSize()){
             addPageIndicator(list,maxPageNumber);
         } else {
             int pageNum = request.getPageNum();
-            int remainPostCnt = totalPostsSize - pageNum * request.getPageSize();
-            int pageWeight = calculatePageNumber(remainPostCnt/request.getPageSize(),remainPostCnt%request.getPageSize());
+            long remainPostCnt = totalPostsSize - (long) pageNum * request.getPageSize();
+            long pageWeight = calculatePageNumber(remainPostCnt/request.getPageSize(),remainPostCnt%request.getPageSize());
             int center = indicatorSize / 2;
             if(pageNum + pageWeight > indicatorSize)
                 addPageIndicator(list,Math.max(Math.min(pageNum+center,maxPageNumber),indicatorSize));
@@ -78,13 +80,13 @@ public class PostServiceImpl implements PostService{
         return list;
     }
 
-    private int calculatePageNumber(int pageNumber, int remainPosts){
+    private long calculatePageNumber(long pageNumber, long remainPosts){
         if(remainPosts > 0)
             return pageNumber+1;
         return pageNumber;
     }
 
-    private void addPageIndicator(List<Integer> list, int pageNum){
+    private void addPageIndicator(List<Long> list, long pageNum){
         int pageCnt = 0;
         while(pageNum>0 && pageCnt < indicatorSize){
             list.add(0,pageNum);
