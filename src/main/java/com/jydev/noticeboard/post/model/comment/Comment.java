@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -15,6 +16,7 @@ public class Comment {
     Long parentId;
     String content;
     LocalDateTime registerDateTime;
+    List<Comment> childComments;
     CommentUser user;
 
     @Override

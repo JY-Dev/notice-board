@@ -35,7 +35,7 @@ public class PostServiceImpl implements PostService{
         if(userEntity == null)
             return Optional.empty();
         return Optional.ofNullable(postRepository.savePost(request,userEntity))
-                .map(postEntity -> postMapper.toPost(postEntity,Collections.emptyList()));
+                .map(postMapper::toPost);
     }
 
     @Override
@@ -45,9 +45,8 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Optional<Post> getPost(Long postId) {
-        List<MappingCommentHierarchy> comments = commentService.getComments(postId);
         return Optional.ofNullable(postRepository.findPostById(postId))
-                .map(postEntity -> postMapper.toPost(postEntity,comments));
+                .map(postMapper::toPost);
     }
 
     @Override

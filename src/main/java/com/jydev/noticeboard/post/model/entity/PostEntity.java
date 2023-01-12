@@ -30,6 +30,9 @@ public class PostEntity {
     @CreatedDate
     private LocalDateTime createdDateTime;
 
+    @OneToMany(mappedBy = "post")
+    private List<CommentEntity> comments;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;

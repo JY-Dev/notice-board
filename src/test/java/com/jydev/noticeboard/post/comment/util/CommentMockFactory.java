@@ -6,6 +6,7 @@ import com.jydev.noticeboard.post.model.comment.MappingCommentHierarchy;
 import com.jydev.noticeboard.post.model.comment.entity.CommentEntity;
 import com.jydev.noticeboard.post.model.comment.request.CommentRequest;
 import com.jydev.noticeboard.post.util.PostData;
+import com.jydev.noticeboard.post.util.PostMockFactory;
 import com.jydev.noticeboard.user.util.UserData;
 import com.jydev.noticeboard.user.util.UserMockFactory;
 
@@ -24,8 +25,14 @@ public class CommentMockFactory {
         return commentRequest;
     }
 
-    public static CommentEntity makeCommentEntity(Long parentId){
-        return new CommentEntity(UserMockFactory.makeUserEntity(),PostData.postId, CommentData.commentId,parentId,"",LocalDateTime.now());
+    public static CommentEntity makeCommentEntity(Long parentId, Long postId){
+        CommentEntity commentEntity = new CommentEntity();
+        commentEntity.setId(CommentData.commentId);
+        commentEntity.setUserEntity(UserMockFactory.makeUserEntity());
+        commentEntity.setPost(PostMockFactory.makePostEntity(postId));
+        commentEntity.setContent("");
+        commentEntity.setCreatedDateTime(LocalDateTime.now());
+        return commentEntity;
     }
     public static Comment makeComment(Long parentId){
         return new Comment(CommentData.commentId,parentId,"", LocalDateTime.now(),makeCommentUser());
@@ -44,10 +51,10 @@ public class CommentMockFactory {
         return childComments;
     }
 
-    public static List<CommentEntity> makeChildCommentEntities(){
+    public static List<CommentEntity> makeChildCommentEntities(Long postId){
         List<CommentEntity> childComments = new ArrayList<>();
-        CommentEntity comment = makeCommentEntity(CommentData.commentId);
-        CommentEntity comment1 = makeCommentEntity(CommentData.commentId);
+        CommentEntity comment = makeCommentEntity(CommentData.commentId,postId);
+        CommentEntity comment1 = makeCommentEntity(CommentData.commentId,postId);
         childComments.add(comment);
         childComments.add(comment1);
         return childComments;

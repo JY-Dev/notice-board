@@ -1,22 +1,46 @@
 package com.jydev.noticeboard.post.model.comment.entity;
 
+import com.jydev.noticeboard.post.model.entity.PostEntity;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@Entity
+@Table(name = "comment")
+@EntityListeners(AuditingEntityListener.class)
 public class CommentEntity {
-    private UserEntity userEntity;
-    private Long postId;
+
+    @Id
+    @Column(name = "comment_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long parentId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity userEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private PostEntity post;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private CommentEntity parent;
+
+    @OneToMany(mappedBy = "parent")
+    private List<CommentEntity> child;
+
     private String content;
-    private LocalDateTime createDateTime;
+
+    @CreatedDate
+    private LocalDateTime createdDateTime;
 
     @Override
     public int hashCode() {

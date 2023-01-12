@@ -7,6 +7,7 @@ import com.jydev.noticeboard.post.model.comment.Comment;
 import com.jydev.noticeboard.post.model.comment.CommentUser;
 import com.jydev.noticeboard.post.model.comment.MappingCommentHierarchy;
 import com.jydev.noticeboard.post.model.comment.entity.CommentEntity;
+import com.jydev.noticeboard.post.util.PostData;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
 import com.jydev.noticeboard.user.util.UserMockFactory;
 import org.assertj.core.api.Assertions;
@@ -17,7 +18,7 @@ public class CommentMapperTest {
 
     @Test
     void commentEntityToCommentTest(){
-        CommentEntity commentEntity = CommentMockFactory.makeCommentEntity(-1L);
+        CommentEntity commentEntity = CommentMockFactory.makeCommentEntity(-1L, PostData.postId);
         Comment comment = commentMapper.toComment(commentEntity);
         Comment result = CommentMockFactory.makeComment(-1L);
         Assertions.assertThat(result).isEqualTo(comment);
@@ -34,7 +35,7 @@ public class CommentMapperTest {
     @Test
     void commentDataToMappingCommentHierarchy(){
         Comment comment = CommentMockFactory.makeComment(-1L);
-        MappingCommentHierarchy mappingCommentHierarchy = commentMapper.toMappingCommentHierarchy(CommentMockFactory.makeChildCommentEntities(), comment);
+        MappingCommentHierarchy mappingCommentHierarchy = commentMapper.toMappingCommentHierarchy(CommentMockFactory.makeChildCommentEntities(PostData.postId), comment);
         MappingCommentHierarchy result = CommentMockFactory.makeMappingCommentHierarchy();
         Assertions.assertThat(result).isEqualTo(mappingCommentHierarchy);
     }

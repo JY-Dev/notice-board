@@ -66,7 +66,7 @@ public class PostServiceTest {
         PostEntity postEntity = PostMockFactory.makePostEntity(post.getId());
         postEntity.setTitle(PostData.changeTitle);
         postEntity.setContent(PostData.changeContent);
-        Post editPost = postMapper.toPost(postEntity, Collections.emptyList());
+        Post editPost = postMapper.toPost(postEntity);
         postService.updatePost(PostMockFactory.makePostEditRequest(post.getId()));
         Optional<Post> result = postService.getPost(post.getId());
         Assertions.assertThat(result.orElse(null)).isEqualTo(editPost);

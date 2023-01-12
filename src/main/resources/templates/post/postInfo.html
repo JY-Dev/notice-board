@@ -54,32 +54,32 @@
 
         <ul class="mt-3 mb-3 list-group" th:each="comment : ${post.comments}">
             <div class="row">
-                <img th:src="${comment.getParentComment().getUser().getProfileImageUrl()}" th:width="50" th:height="50"
+                <img th:src="${comment.getUser().getProfileImageUrl()}" th:width="50" th:height="50"
                      class="profile-img">
                 <div class="col ml-2">
                     <div class="row">
                         <div class="mr-1" th:text="#{register.user}+'('+#{id}+') : '"></div>
-                        <div class="mr-1" th:text="${comment.getParentComment().getUser().nickname}"></div>
-                        <div th:text="'('+${comment.getParentComment().getUser().id}+')'"></div>
+                        <div class="mr-1" th:text="${comment.getUser().nickname}"></div>
+                        <div th:text="'('+${comment.getUser().id}+')'"></div>
                     </div>
                     <div class="row">
-                        <div th:text="#{register.date}+' : '+${#temporals.format(comment.getParentComment().getRegisterDateTime(),'yyyy-MM-dd')}"></div>
+                        <div th:text="#{register.date}+' : '+${#temporals.format(comment.getRegisterDateTime(),'yyyy-MM-dd')}"></div>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-1 flex-row justify-content-start" th:text="${comment.getParentComment().content}"></div>
+            <div class="mt-1 flex-row justify-content-start" th:text="${comment.content}"></div>
             <div>
                 <button th:text="#{comment.write}" class="text-button" style="color : gray; font-size: small;"
-                        th:onclick="|toggleNestedReply(${comment.getParentComment().id})|"></button>
+                        th:onclick="|toggleNestedReply(${comment.id})|"></button>
                 <button th:text="#{delete}" class="text-button" style="color : gray; font-size: small;"
-                        th:if="${user != null && comment.getParentComment().user.id == user.id}"
-                         th:onclick="|deleteComment(${comment.getParentComment().id})|"></button>
+                        th:if="${user != null && comment.user.id == user.id}"
+                         th:onclick="|deleteComment(${comment.id})|"></button>
             </div>
 
-            <div th:id="|${comment.getParentComment().id}-nested-reply|" style="display: none">
+            <div th:id="|${comment.id}-nested-reply|" style="display: none">
                 <div style="position:relative">
-                <textarea th:id="|${comment.getParentComment().id}-child-comment|" rows="5" cols="92"
+                <textarea th:id="|${comment.id}-child-comment|" rows="5" cols="92"
                           style="font-size: 18px; display: table" maxlength="50"
                           th:disabled="${user} == null"></textarea>
                     <div th:if="${user} == null" class="row m-2" style="position:absolute;left: 10px;top: 0px;">
@@ -89,7 +89,7 @@
                 </div>
                 <div class="d-flex justify-content-end mt-2">
                     <button class="btn btn-primary text-uppercase" th:text="#{comment.register}"
-                            th:onclick="|registerChildComment(${comment.getParentComment().id})|"></button>
+                            th:onclick="|registerChildComment(${comment.getId()})|"></button>
                 </div>
             </div>
             <div class="base-divider mt-4"></div>
