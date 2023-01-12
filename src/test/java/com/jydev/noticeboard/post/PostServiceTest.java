@@ -20,8 +20,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -55,9 +57,8 @@ public class PostServiceTest {
     @Test
     public void deletePostTest(){
         Optional<Post> post = postService.registerPost(PostMockFactory.makePostRequest());
-        Assertions.assertThat(post.orElse(null)).isEqualTo(PostMockFactory.makePost());
-        postService.deletePostById(PostData.postId);
-        Assertions.assertThat(postService.getPost(PostData.postId).orElse(null)).isNull();
+        postService.deletePostById(post.get().getId());
+        Assertions.assertThat(postService.getPost(post.get().getId()).orElse(null)).isNull();
     }
 
     @Test
@@ -75,11 +76,15 @@ public class PostServiceTest {
 
     @Test
     public void findPagePostsTest(){
+        int pageNum = 2;
+        int pageSize = 10;
         for (int i = 0; i < PostData.PAGE_POSTS_MAX_SIZE; i++) {
             postService.registerPost(PostMockFactory.makePostRequest());
         }
-        List<PagePost> result = postService.findPagePosts(PostMockFactory.makePostAllSearchRequest());
-        Assertions.assertThat(result.size()).isEqualTo(PostData.PAGE_POSTS_MAX_SIZE);
+        List<PagePost> result = postService.findPagePosts(PostMockFactory.makePostSearchRequest(pageNum,pageSize));
+        for(int i = 0; i < pageSize; i++){
+            Assertions.assertThat(i+pageNum*pageSize+1L).isEqualTo(result.get(i).getId());
+        }
     }
 
     @Test

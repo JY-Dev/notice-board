@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -59,12 +61,16 @@ public class PostRepositoryImpl implements PostRepository{
     public List<PostEntity> findAllPost(PostSearchRequest request) {
         TypedQuery<PostEntity> query = em.createQuery("select p from PostEntity p where p.title LIKE CONCAT('%',:keyword,'%')",PostEntity.class);
         query.setParameter("keyword",request.getKeyword());
-        return query.setMaxResults(request.getPageSize()).getResultList();
+        query.setFirstResult(request.getPageNum()*request.getPageSize());
+        query.setMaxResults(request.getPageSize());
+        return query.getResultList();
     }
 
 
     @Override
     public Long getTotalPostsSize(PostSearchRequest request) {
-        return em.createQuery("select count(p) from PostEntity p",Long.class).getSingleResult();
+        TypedQuery<Long> query = em.createQuery("select count(p) from PostEntity p where p.title LIKE CONCAT('%',:keyword,'%')",Long.class);
+        query.setParameter("keyword",request.getKeyword());
+        return query.getSingleResult();
     }
 }
