@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -47,6 +48,16 @@ public class UserController {
     @GetMapping("/login")
     public String loginUserForm(@ModelAttribute("userLoginForm") UserLoginRequest userLoginRequest){
         return "user/login";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session == null)
+            return "redirect:/";
+        userService.logout(session.getId());
+        session.invalidate();
+        return "redirect:/user/login";
     }
 
     @PostMapping("/login")

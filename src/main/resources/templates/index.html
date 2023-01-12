@@ -8,6 +8,7 @@
 <div class="container">
     <div class="col-sm-12 col-md-12 col-lg-12 mx-auto">
         <div class="d-flex row justify-content-end mt-3">
+            <button class="btn btn-primary mr-3" th:if="${user != null}" th:text="#{logout}" th:onclick="|location.href='/user/logout'|"></button>
             <button class="btn btn-primary mr-3" th:if="${user == null}" th:text="#{login}" th:onclick="|location.href='/user/login'|"></button>
             <button class="btn btn-primary mr-3" th:if="${user == null}" th:text="#{register}" th:onclick="|location.href='/user/register'|"></button>
         </div>
