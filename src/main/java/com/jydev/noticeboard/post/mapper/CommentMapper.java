@@ -7,19 +7,15 @@ import com.jydev.noticeboard.post.model.comment.entity.CommentEntity;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class CommentMapper {
     public Comment toComment(CommentEntity commentEntity) {
-        CommentEntity parentComment = commentEntity.getParent();
-        Long parentId = Optional.ofNullable(parentComment.getId()).orElse(-1L);
-        List<CommentEntity> childComments = Optional.ofNullable(commentEntity.getChild()).orElse(Collections.emptyList());
+        Long parentId = -1L;
         return new Comment(commentEntity.getId(), parentId,
-                commentEntity.getContent(), commentEntity.getCreatedDateTime(), childComments.stream().map(this::toComment).toList(), toCommentUser(commentEntity.getUserEntity()));
+                commentEntity.getContent(), commentEntity.getCreatedDateTime(), commentEntity.getChild().stream().map(this::toComment).toList(), toCommentUser(commentEntity.getUserEntity()));
     }
 
     public CommentUser toCommentUser(UserEntity userEntity) {

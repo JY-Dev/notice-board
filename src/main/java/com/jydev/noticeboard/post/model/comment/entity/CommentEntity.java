@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -35,7 +36,7 @@ public class CommentEntity {
     private CommentEntity parent;
 
     @OneToMany(mappedBy = "parent")
-    private List<CommentEntity> child;
+    private List<CommentEntity> child = Collections.emptyList();
 
     private String content;
 
