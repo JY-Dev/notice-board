@@ -59,9 +59,9 @@ public class PostRepositoryImpl implements PostRepository{
 
     @Override
     public List<PostEntity> findAllPost(PostSearchRequest request) {
-        TypedQuery<PostEntity> query = em.createQuery("select p from PostEntity p where p.title LIKE CONCAT('%',:keyword,'%')",PostEntity.class);
+        TypedQuery<PostEntity> query = em.createQuery("select p from PostEntity p where p.title LIKE CONCAT('%',:keyword,'%') ORDER BY p.id desc ",PostEntity.class);
         query.setParameter("keyword",request.getKeyword());
-        query.setFirstResult(request.getPageNum()*request.getPageSize());
+        query.setFirstResult((request.getPageNum()-1)*request.getPageSize());
         query.setMaxResults(request.getPageSize());
         return query.getResultList();
     }

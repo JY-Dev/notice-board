@@ -52,7 +52,7 @@
 </body>
 <script th:inline="javascript">
 
-    let currentKeyword = [[${param.keyword}]];
+    let currentKeyword = [[${param.keyword}]] || '';
     function searchPost(){
         let keyword = $('#search-input').val()
         window.location.href = '/post/page?keyword='+keyword
