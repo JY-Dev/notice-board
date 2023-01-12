@@ -18,9 +18,9 @@ public class CommentMapperTest {
 
     @Test
     void commentEntityToCommentTest(){
-        CommentEntity commentEntity = CommentMockFactory.makeCommentEntity(-1L, PostData.postId);
+        CommentEntity commentEntity = CommentMockFactory.makeCommentEntity(PostData.postId);
         Comment comment = commentMapper.toComment(commentEntity);
-        Comment result = CommentMockFactory.makeComment(-1L);
+        Comment result = CommentMockFactory.makeComment(PostData.postId);
         Assertions.assertThat(result).isEqualTo(comment);
     }
 
@@ -32,11 +32,4 @@ public class CommentMapperTest {
         Assertions.assertThat(result).isEqualTo(commentUser);
     }
 
-    @Test
-    void commentDataToMappingCommentHierarchy(){
-        Comment comment = CommentMockFactory.makeComment(-1L);
-        MappingCommentHierarchy mappingCommentHierarchy = commentMapper.toMappingCommentHierarchy(CommentMockFactory.makeChildCommentEntities(PostData.postId), comment);
-        MappingCommentHierarchy result = CommentMockFactory.makeMappingCommentHierarchy();
-        Assertions.assertThat(result).isEqualTo(mappingCommentHierarchy);
-    }
 }

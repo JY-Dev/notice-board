@@ -6,6 +6,7 @@ import com.jydev.noticeboard.post.model.PagePost;
 import com.jydev.noticeboard.post.model.Post;
 import com.jydev.noticeboard.post.model.comment.Comment;
 import com.jydev.noticeboard.post.model.comment.request.CommentRequest;
+import com.jydev.noticeboard.post.model.comment.request.DeleteCommentRequest;
 import com.jydev.noticeboard.post.model.request.PostEditRequest;
 import com.jydev.noticeboard.post.model.request.PostRequest;
 import com.jydev.noticeboard.post.model.request.PostSearchRequest;
@@ -132,13 +133,13 @@ public class PostController {
     }
 
     @ResponseBody
-    @DeleteMapping("/{postNumber}/comment/{commentId}")
-    public ResponseEntity<HttpResponse<String>> deleteComment(@PathVariable Long postNumber,@PathVariable Long commentId,
+    @DeleteMapping("/{postNumber}/comment")
+    public ResponseEntity<HttpResponse<String>> deleteComment(@PathVariable Long postNumber,@RequestBody DeleteCommentRequest request,
                                                               @AttributeLoginUser User user){
-        Optional<Comment> comment = commentService.getComment(commentId);
-        if(comment.isEmpty() || !comment.get().getUser().getId().equals(user.getId()))
+        Optional<Comment> comment = commentService.getComment(request.getParentId(),request.getCommentId());
+        if(comment.isEmpty() || !comment.get().getUser().getId().equals(user.getId()) || !comment.get().getPostId().equals(postNumber))
             return new ResponseEntity<>(httpResponseMapper.toHttpResponse(HttpStatus.BAD_REQUEST,""),HttpStatus.BAD_REQUEST);
-        commentService.deleteComment(commentId);
+        commentService.deleteComment(request.getParentId(),request.getCommentId());
         return ResponseEntity.ok(httpResponseMapper.toHttpResponse(HttpStatus.OK,""));
     }
 

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CommentService {
     Optional<Comment> registerComment(CommentRequest commentRequest);
-    void deleteComment(Long commentId);
+    void deleteComment(Long parentId,Long commentId);
 
-    Optional<Comment> getComment(Long commentId);
+    Optional<Comment> getComment(Long parentId, Long commentId);
 }

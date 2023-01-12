@@ -12,20 +12,21 @@ import com.jydev.noticeboard.user.util.UserMockFactory;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class CommentMockFactory {
 
-    public static CommentRequest makeCommentRequest(Long parentId){
+    public static CommentRequest makeCommentRequest(Long postId,Long parentId){
         CommentRequest commentRequest = new CommentRequest();
-        commentRequest.setPostId(PostData.postId);
+        commentRequest.setPostId(postId);
         commentRequest.setUserId(UserData.userId);
         commentRequest.setContent("");
         commentRequest.setParentId(parentId);
         return commentRequest;
     }
 
-    public static CommentEntity makeCommentEntity(Long parentId, Long postId){
+    public static CommentEntity makeCommentEntity( Long postId){
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setId(CommentData.commentId);
         commentEntity.setUserEntity(UserMockFactory.makeUserEntity());
@@ -34,30 +35,12 @@ public class CommentMockFactory {
         commentEntity.setCreatedDateTime(LocalDateTime.now());
         return commentEntity;
     }
-    public static Comment makeComment(Long parentId){
-        return new Comment(CommentData.commentId,parentId,"", LocalDateTime.now(),makeCommentUser());
+    public static Comment makeComment(Long postId){
+        return new Comment(CommentData.commentId,"", LocalDateTime.now(), Collections.emptyList(),makeCommentUser(),postId);
     }
 
-    public static MappingCommentHierarchy makeMappingCommentHierarchy(){
-        return new MappingCommentHierarchy(makeComment(-1L),makeChildComments());
-    }
-
-    public static List<Comment> makeChildComments(){
-        List<Comment> childComments = new ArrayList<>();
-        Comment comment = makeComment(CommentData.commentId);
-        Comment comment1 = makeComment(CommentData.commentId);
-        childComments.add(comment);
-        childComments.add(comment1);
-        return childComments;
-    }
-
-    public static List<CommentEntity> makeChildCommentEntities(Long postId){
-        List<CommentEntity> childComments = new ArrayList<>();
-        CommentEntity comment = makeCommentEntity(CommentData.commentId,postId);
-        CommentEntity comment1 = makeCommentEntity(CommentData.commentId,postId);
-        childComments.add(comment);
-        childComments.add(comment1);
-        return childComments;
+    public static Comment makeComment( Long commentId, Long postId){
+        return new Comment(commentId,"", LocalDateTime.now(), Collections.emptyList(),makeCommentUser(),postId);
     }
 
     public static CommentUser makeCommentUser(){

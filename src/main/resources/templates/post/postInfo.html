@@ -74,7 +74,7 @@
                         th:onclick="|toggleNestedReply(${comment.id})|"></button>
                 <button th:text="#{delete}" class="text-button" style="color : gray; font-size: small;"
                         th:if="${user != null && comment.user.id == user.id}"
-                         th:onclick="|deleteComment(${comment.id})|"></button>
+                         th:onclick="|deleteComment(${comment.id},-1)|"></button>
             </div>
 
             <div th:id="|${comment.id}-nested-reply|" style="display: none">
@@ -112,7 +112,7 @@
                 <div>
                     <button th:text="#{delete}" class="text-button" style="color : gray; font-size: small;"
                             th:if="${user != null && childComment.user.id == user.id}"
-                            th:onclick="|deleteComment(${childComment.id})|"></button>
+                            th:onclick="|deleteComment(${childComment.id},${comment.id})|"></button>
                 </div>
 
                 <div class="base-divider mt-4"></div>
@@ -146,9 +146,12 @@
         deleteAjaxRequest(postUrl,"","/");
     }
 
-    function deleteComment(commentId){
-        let url = registerCommentUrl+'/'+commentId;
-        deleteAjaxRequest(url,"",postUrl);
+    function deleteComment(commentId,parentId){
+        let data = JSON.stringify({
+            "parentId" : parentId,
+            "commentId" : commentId
+        })
+        deleteAjaxRequest(registerCommentUrl,data,postUrl);
     }
 
     function editPost(){

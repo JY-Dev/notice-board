@@ -11,6 +11,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +33,7 @@ public class PostEntity {
     private LocalDateTime createdDateTime;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<CommentEntity> comments = Collections.emptyList();
+    private List<CommentEntity> comments = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")

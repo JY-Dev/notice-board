@@ -16,10 +16,10 @@ import java.util.List;
 public class PostMapper {
     private final CommentMapper commentMapper;
     public Post toPost(PostEntity postEntity) {
-        int commentsSize = (int) postEntity.getComments().stream().map(commentEntity -> commentEntity.getChild().size()+1).count();
+        int commentsSize = postEntity.getComments().stream().map(commentEntity -> commentEntity.getChild().size()).reduce(Integer::sum).orElse(0);
         List<Comment> comments = postEntity.getComments().stream().map(commentMapper::toComment).toList();
         return new Post(postEntity.getId(), toPostUser(postEntity.getUser()),
-                postEntity.getTitle(), postEntity.getContent(), postEntity.getCreatedDateTime(), commentsSize, comments);
+                postEntity.getTitle(), postEntity.getContent(), postEntity.getCreatedDateTime(), commentsSize+comments.size(), comments);
     }
 
     public PostUser toPostUser(UserEntity userEntity) {

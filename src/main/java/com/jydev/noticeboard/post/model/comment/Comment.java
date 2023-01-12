@@ -12,11 +12,11 @@ import java.util.List;
 @ToString
 public class Comment {
     Long id;
-    Long parentId;
     String content;
     LocalDateTime registerDateTime;
     List<Comment> childComments;
     CommentUser user;
+    Long postId;
 
     @Override
     public int hashCode() {
