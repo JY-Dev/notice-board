@@ -1,0 +1,33 @@
+.field-error {
+    border-color: #dc3545;
+    color: #dc3545;
+}
+.profile-img{
+    border-radius: 50%;
+    border:3px solid skyblue;
+    padding: 5px;
+}
+.base-divider{
+    border:1px solid darkgray;
+}
+.text-button{
+    background-color: transparent;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+}
+.text-button:focus{
+    border: none;
+    outline: none;
+}
+.indicator-select{
+    outline: black;
+    border:2px solid black;
+}
+
+.indicator{
+    outline: skyblue;
+    border:2px solid skyblue;
+}

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragment/base_head.html :: base_head(~{::title})">
+    <title th:text="#{post}">Title</title>
+</head>
+<body>
+<div class="container flex-box">
+    <div class="col-sm-10 col-md-10 col-lg-10 mx-auto" th:object="${post}">
+        <h1 class="d-flex justify-content-center mt-5" th:text="'-------- '+*{id}+' 번째 '+#{post}+' '+' --------'"></h1>
+        <div class="mt-5 d-flex">
+            <img th:src="${post.user.getImageUrl()}" th:width="50" th:height="50" class="profile-img">
+            <div class="col ml-2">
+                <div class="justify-content-center">
+                    <div class="row">
+                        <div class="mr-1" th:text="#{register.user}+'('+#{id}+') : '"></div>
+                        <div class="mr-1" th:text="${post.user.nickname}"></div>
+                        <div th:text="'('+${post.user.id}+')'"></div>
+                    </div>
+                    <div class="row">
+                        <div th:text="#{register.date}+' : '+*{#temporals.format(getRegisterDateTime,'yyyy-MM-dd')}"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="mt-5 flex-column">
+            <h2 th:text="*{title}"></h2>
+            <div class="mt-3" th:utext="*{content}"></div>
+        </div>
+
+        <div class="d-flex justify-content-end mt-2">
+            <button class="btn btn-primary text-uppercase" th:text="#{edit}" th:if="${user != null && post.user.id == user.id}"
+                    th:onclick="editPost()"></button>
+            <button class="btn btn-primary text-uppercase ml-2" th:text="#{delete}" th:if="${user != null && post.user.id == user.id}"
+                    th:onclick="deletePost()"></button>
+            <button class="btn btn-primary ml-2" th:text="#{post.list}" th:onclick="|location.href='/post/page'|"></button>
+        </div>
+
+        <div class="base-divider mt-5 mb-3"></div>
+        <h5 th:text="#{comment} + ' ' + *{commentSize}+#{amount}"></h5>
+        <div style="position:relative">
+            <textarea id="comment" rows="5" cols="92" style="font-size: 18px; display: table" maxlength="50"
+                      th:disabled="${user} == null"></textarea>
+            <div th:if="${user} == null" class="row m-2" style="position:absolute;left: 10px;top: 0px;">
+                <p th:text="#{login.after}"></p>
+                <a th:href="|/user/login?redirectURL=/post/${postNumber}|" th:text="#{login}" class="ml-1"></a>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end mt-2 mb-3">
+            <button class="btn btn-primary text-uppercase" th:text="#{comment.register}"
+                    th:onclick="registerParentComment()"></button>
+        </div>
+
+
+        <ul class="mt-3 mb-3 list-group" th:each="comment : ${post.comments}">
+            <div class="row">
+                <img th:src="${comment.getUser().getProfileImageUrl()}" th:width="50" th:height="50"
+                     class="profile-img">
+                <div class="col ml-2">
+                    <div class="row">
+                        <div class="mr-1" th:text="#{register.user}+'('+#{id}+') : '"></div>
+                        <div class="mr-1" th:text="${comment.getUser().nickname}"></div>
+                        <div th:text="'('+${comment.getUser().id}+')'"></div>
+                    </div>
+                    <div class="row">
+                        <div th:text="#{register.date}+' : '+${#temporals.format(comment.getRegisterDateTime(),'yyyy-MM-dd')}"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-1 flex-row justify-content-start" th:text="${comment.content}"></div>
+            <div>
+                <button th:text="#{comment.write}" class="text-button" style="color : gray; font-size: small;"
+                        th:onclick="|toggleNestedReply(${comment.id})|"></button>
+                <button th:text="#{delete}" class="text-button" style="color : gray; font-size: small;"
+                        th:if="${user != null && comment.user.id == user.id}"
+                         th:onclick="|deleteComment(${comment.id},-1)|"></button>
+            </div>
+
+            <div th:id="|${comment.id}-nested-reply|" style="display: none">
+                <div style="position:relative">
+                <textarea th:id="|${comment.id}-child-comment|" rows="5" cols="92"
+                          style="font-size: 18px; display: table" maxlength="50"
+                          th:disabled="${user} == null"></textarea>
+                    <div th:if="${user} == null" class="row m-2" style="position:absolute;left: 10px;top: 0px;">
+                        <p th:text="#{login.after}"></p>
+                        <a th:href="|/user/login?redirectURL=/post/${postNumber}|" th:text="#{login}" class="ml-1"></a>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-2">
+                    <button class="btn btn-primary text-uppercase" th:text="#{comment.register}"
+                            th:onclick="|registerChildComment(${comment.getId()})|"></button>
+                </div>
+            </div>
+            <div class="base-divider mt-4"></div>
+            <li class="m-3 list-group-item" th:each="childComment : ${comment.getChildComments()}">
+                <div class="row">
+                    <img th:src="${childComment.getUser().getProfileImageUrl()}" th:width="50" th:height="50"
+                         class="profile-img">
+                    <div class="col ml-2">
+                        <div class="row">
+                            <div class="mr-1" th:text="#{register.user}+'('+#{id}+') : '"></div>
+                            <div class="mr-1" th:text="${childComment.getUser().nickname}"></div>
+                            <div th:text="'('+${childComment.getUser().id}+')'"></div>
+                        </div>
+                        <div class="row">
+                            <div th:text="#{register.date}+' : '+${#temporals.format(childComment.getRegisterDateTime(),'yyyy-MM-dd')}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3" th:text="${childComment.content}"></div>
+                <div>
+                    <button th:text="#{delete}" class="text-button" style="color : gray; font-size: small;"
+                            th:if="${user != null && childComment.user.id == user.id}"
+                            th:onclick="|deleteComment(${childComment.id},${comment.id})|"></button>
+                </div>
+
+                <div class="base-divider mt-4"></div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+<script th:inline="javascript">
+    let postId = [[${post.id}]];
+    let postUrl = "/post/" + postId
+    let registerCommentUrl = postUrl + "/comment";
+
+    function registerParentComment() {
+        let content = $("#comment").val();
+        if (content !== "") {
+            requestRegisterComment(content,-1);
+        }
+
+    }
+
+    function registerChildComment(parentId) {
+        let content = $('#' + parentId + '-child-comment').val();
+        if (content !== "") {
+            requestRegisterComment(content,parentId);
+        }
+    }
+
+    function deletePost(){
+        deleteAjaxRequest(postUrl,"","/");
+    }
+
+    function deleteComment(commentId,parentId){
+        let data = JSON.stringify({
+            "parentId" : parentId,
+            "commentId" : commentId
+        })
+        deleteAjaxRequest(registerCommentUrl,data,postUrl);
+    }
+
+    function editPost(){
+        window.location.href=postUrl+'/edit';
+    }
+
+    function deleteAjaxRequest(url,data,redirectUrl){
+        $.ajax({
+            type: 'delete',           // 타입 (get, post, put 등등)
+            url: url,           // 요청할 서버url
+            async: true,            // 비동기화 여부 (default : true)
+            headers: {              // Http header
+                "Content-Type": "application/json"
+            },
+            dataType: 'text',       // 데이터 타입 (html, xml, json, text 등등)
+            data: data,
+            success: function () { // 결과 성공 콜백함수
+                window.location = redirectUrl;
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        });
+    }
+
+    function requestRegisterComment(content, parentId) {
+        $.ajax({
+            type: 'post',           // 타입 (get, post, put 등등)
+            url: registerCommentUrl,           // 요청할 서버url
+            async: true,            // 비동기화 여부 (default : true)
+            headers: {              // Http header
+                "Content-Type": "application/json"
+            },
+            dataType: 'text',       // 데이터 타입 (html, xml, json, text 등등)
+            data: JSON.stringify({  // 보낼 데이터 (Object , String, Array)
+                "userId": "",
+                "postId": postId,
+                "parentId": parentId,
+                "content": content
+            }),
+            success: function () { // 결과 성공 콜백함수
+                window.location = postUrl;
+            },
+            error: function (request, status, error) { // 결과 에러 콜백함수
+                console.log(error);
+            }
+        })
+    }
+
+
+    function toggleNestedReply(parentId) {
+        let nestedReplyId = '#' + parentId + '-nested-reply';
+        $(nestedReplyId).toggle();
+    }
+</script>
+</html>
