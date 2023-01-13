@@ -2,55 +2,61 @@ package com.jydev.noticeboard.post.service.comment;
 
 import com.jydev.noticeboard.post.mapper.CommentMapper;
 import com.jydev.noticeboard.post.model.comment.Comment;
-import com.jydev.noticeboard.post.model.comment.MappingCommentHierarchy;
 import com.jydev.noticeboard.post.model.comment.entity.CommentEntity;
 import com.jydev.noticeboard.post.model.comment.request.CommentRequest;
+import com.jydev.noticeboard.post.model.entity.PostEntity;
+import com.jydev.noticeboard.post.repository.PostRepository;
 import com.jydev.noticeboard.post.repository.comment.CommentRepository;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
 import com.jydev.noticeboard.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class CommentServiceImpl implements CommentService{
 
     private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
+
+    private final PostRepository postRepository;
     private final UserRepository userRepository;
 
     @Override
     public Optional<Comment> registerComment(CommentRequest commentRequest) {
         UserEntity userEntity = userRepository.findById(commentRequest.getUserId());
-        if(userEntity == null)
+        PostEntity postEntity = postRepository.findPostById(commentRequest.getPostId());
+        if(userEntity == null || postEntity == null)
             return Optional.empty();
-
-        return Optional.ofNullable(commentMapper.toComment(commentRepository.saveComment(commentRequest,userEntity)));
+        if(isChildComment(commentRequest.getParentId())){
+            CommentEntity parentComment = commentRepository.getCommentById(commentRequest.getParentId());
+            return Optional.ofNullable(commentMapper.toComment(commentRepository.saveChildComment(commentRequest,parentComment,postEntity,userEntity)));
+        } else
+            return Optional.ofNullable(commentMapper.toComment(commentRepository.saveComment(commentRequest,postEntity,userEntity)));
     }
 
     @Override
-    public void deleteComment(Long commentId) {
-        commentRepository.deleteCommentById(commentId);
+    public void deleteComment(Long parentId, Long commentId) {
+        if(isChildComment(parentId))
+            commentRepository.deleteChildCommentById(commentId);
+        else
+            commentRepository.deleteCommentById(commentId);
     }
 
     @Override
-    public List<MappingCommentHierarchy> getComments(Long postId) {
-        List<CommentEntity> commentEntities = commentRepository.findCommentsByPostId(postId);
-        return commentEntities.stream()
-                .filter(commentEntity -> commentEntity.getParentId() == -1)
-                .map(commentMapper::toComment)
-                .map(parentComment -> commentMapper.toMappingCommentHierarchy(commentEntities,parentComment)).toList();
+    public Optional<Comment> getComment(Long parentId, Long commentId) {
+        if(isChildComment(parentId))
+            return Optional.ofNullable(commentMapper.toComment(commentRepository.getChildCommentById(commentId)));
+        else
+            return Optional.ofNullable(commentMapper.toComment(commentRepository.getCommentById(commentId)));
     }
 
-    @Override
-    public Optional<Comment> getComment(Long commentId) {
-        CommentEntity commentEntity = commentRepository.getCommentById(commentId);
-        if(commentEntity == null)
-            return Optional.empty();
-
-        return Optional.of(commentMapper.toComment(commentEntity));
+    private boolean isChildComment(long parentId){
+        return parentId != -1L;
     }
 }

@@ -5,25 +5,20 @@ import com.jydev.noticeboard.user.model.entity.UserEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @Getter
 @Setter
-@ToString
 @Entity
-@Table(name = "comment")
+@Table(name = "child_comment")
 @EntityListeners(AuditingEntityListener.class)
-public class CommentEntity {
+public class ChildCommentEntity {
 
     @Id
-    @Column(name = "comment_id")
+    @Column(name = "child_comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
@@ -34,13 +29,21 @@ public class CommentEntity {
     @JoinColumn(name = "post_id")
     private PostEntity post;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
-    private List<ChildCommentEntity> child = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private CommentEntity parent;
 
     private String content;
 
     @CreatedDate
     private LocalDateTime createdDateTime;
+
+    public void registerChildComment(CommentEntity parent){
+        if(this.parent != null)
+            this.parent.getChild().remove(this);
+        parent.getChild().add(this);
+        this.parent = parent;
+    }
 
     @Override
     public int hashCode() {
@@ -49,7 +52,7 @@ public class CommentEntity {
 
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof CommentEntity other)
+        if(obj instanceof ChildCommentEntity other)
             return userEntity.equals(other.userEntity) && other.id.equals(other.getId());
         return false;
     }

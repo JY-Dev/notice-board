@@ -14,8 +14,8 @@ import com.jydev.noticeboard.user.repository.UserRepository;
 import com.jydev.noticeboard.user.util.UserDependency;
 
 public class PostDependency {
-    public static PostMapper postMapper = new PostMapper();
     public static CommentMapper commentMapper = new CommentMapper();
+    public static PostMapper postMapper = new PostMapper(commentMapper);
 
     public static final UserRepository userRepository = UserDependency.getUserRepository();
     public static final PostRepository postRepository = new MemoryPostRepositoryImpl(UserDependency.userMapper);
@@ -24,7 +24,7 @@ public class PostDependency {
         return new MemoryCommentRepositoryImpl();
     }
     public static CommentService getCommentService(){
-        return new CommentServiceImpl(commentMapper,getCommentRepository(),userRepository);
+        return new CommentServiceImpl(commentMapper,getCommentRepository(),postRepository,userRepository);
     }
 
     public static PostService getPostService(){

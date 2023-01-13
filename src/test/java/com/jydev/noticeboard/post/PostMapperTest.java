@@ -3,6 +3,7 @@ package com.jydev.noticeboard.post;
 import com.jydev.noticeboard.post.mapper.PostMapper;
 import com.jydev.noticeboard.post.model.Post;
 import com.jydev.noticeboard.post.model.PostUser;
+import com.jydev.noticeboard.post.util.PostData;
 import com.jydev.noticeboard.post.util.PostDependency;
 import com.jydev.noticeboard.post.util.PostMockFactory;
 import com.jydev.noticeboard.user.model.entity.UserEntity;
@@ -17,7 +18,7 @@ public class PostMapperTest {
 
     @Test
     void PostEntityToPostTest(){
-        Post post = postMapper.toPost(PostMockFactory.makePostEntity(), Collections.emptyList());
+        Post post = postMapper.toPost(PostMockFactory.makePostEntity(PostData.postId));
         Post result = PostMockFactory.makePost();
         Assertions.assertThat(result).isEqualTo(post);
     }

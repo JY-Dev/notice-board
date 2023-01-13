@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
+//@Repository
 public class MemoryPostRepositoryImpl implements PostRepository {
     private final Map<Long, PostEntity> storePost = new HashMap<>();
     private AtomicLong idCnt = new AtomicLong();
@@ -33,7 +33,12 @@ public class MemoryPostRepositoryImpl implements PostRepository {
             userRegisterRequest.setPassword("1234");
             userRegisterRequest.setConfirmPassword("1234");
             UserEntity userEntity = userMapper.toEntity(userRegisterRequest);
-            PostEntity postEntity = new PostEntity(postId,postRequest.getTitle(),postRequest.getContent(),LocalDateTime.now(),userEntity);
+            PostEntity postEntity = new PostEntity();
+            postEntity.setId(postId);
+            postEntity.setUser(userEntity);
+            postEntity.setTitle(postRequest.getTitle());
+            postEntity.setContent(postEntity.getContent());
+            postEntity.setCreatedDateTime(LocalDateTime.now());
             storePost.put(postId,postEntity);
         }
     }
@@ -42,7 +47,12 @@ public class MemoryPostRepositoryImpl implements PostRepository {
     public PostEntity savePost(PostRequest request, UserEntity registerUser) {
         long postId = idCnt.get();
         idCnt.set(postId+1);
-        PostEntity postEntity = new PostEntity(postId, request.getTitle(), request.getContent(), LocalDateTime.now(), registerUser);
+        PostEntity postEntity = new PostEntity();
+        postEntity.setId(postId);
+        postEntity.setTitle(request.getTitle());
+        postEntity.setContent(request.getContent());
+        postEntity.setCreatedDateTime(LocalDateTime.now());
+        postEntity.setUser(registerUser);
         storePost.put(postId,postEntity);
         return postEntity;
     }
@@ -95,8 +105,8 @@ public class MemoryPostRepositoryImpl implements PostRepository {
     }
 
     @Override
-    public int getTotalPostsSize(PostSearchRequest request) {
-        return (int) storePost.values().stream().filter(post -> isFilterKeyword(request.getKeyword(),post.getTitle())).count();
+    public Long getTotalPostsSize(PostSearchRequest request) {
+        return storePost.values().stream().filter(post -> isFilterKeyword(request.getKeyword(),post.getTitle())).count();
     }
 
     private boolean isFilterKeyword(String keyword, String target){

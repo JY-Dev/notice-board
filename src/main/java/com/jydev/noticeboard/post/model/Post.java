@@ -1,5 +1,6 @@
 package com.jydev.noticeboard.post.model;
 
+import com.jydev.noticeboard.post.model.comment.Comment;
 import com.jydev.noticeboard.post.model.comment.MappingCommentHierarchy;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -20,7 +21,7 @@ public class Post {
     private String content;
     private LocalDateTime registerDateTime;
     private Integer commentSize;
-    private List<MappingCommentHierarchy> comments;
+    private List<Comment> comments;
 
     @Override
     public boolean equals(Object o) {

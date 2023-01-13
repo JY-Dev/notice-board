@@ -18,5 +18,5 @@ public interface PostRepository {
     void deleteAllPost();
     List<PostEntity> findAllPost(PostSearchRequest request);
 
-    int getTotalPostsSize(PostSearchRequest request);
+    Long getTotalPostsSize(PostSearchRequest request);
 }

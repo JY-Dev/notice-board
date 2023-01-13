@@ -20,7 +20,14 @@ public class UserMapper {
     @Value("${default.file.image}")
     private String defaultImageFileName;
     public UserEntity toEntity(UserRegisterRequest request){
-        return new UserEntity(fileSystem.getHttpProtocolUrl(defaultImageFileName, FileType.IMAGE), request.getEmail(),request.getNickname(),request.getId(),request.getPassword(), UserRole.COMMON, LocalDateTime.now());
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(request.getId());
+        userEntity.setPassword(request.getPassword());
+        userEntity.setRole(UserRole.COMMON);
+        userEntity.setEmail(request.getEmail());
+        userEntity.setNickname(request.getNickname());
+        userEntity.setProfileImageUrl(fileSystem.getHttpProtocolUrl(defaultImageFileName, FileType.IMAGE));
+        return userEntity;
     }
     public User toUser(UserEntity userEntity){
         return new User(userEntity.getProfileImageUrl(),userEntity.getEmail(),userEntity.getNickname(),userEntity.getId(),userEntity.getRole());

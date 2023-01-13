@@ -7,5 +7,5 @@ public class UserData {
     public static final String userPw = "userPw";
 
     public static final String sessionId = "sessionId";
-    public static final String profileImageUrl = "nullfile/image/null";
+    public static final String profileImageUrl = "http://localhost:8080/file/image/default.png";
 }
