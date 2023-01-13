@@ -61,7 +61,7 @@ public class PostMockFactory {
     }
 
     public static PostSearchRequest makePostAllSearchRequest(){
-        return new PostSearchRequest("",0,PostData.PAGE_POSTS_MAX_SIZE);
+        return new PostSearchRequest("",1,PostData.PAGE_POSTS_MAX_SIZE);
     }
 
     public static PostSearchRequest makePostSearchRequest(Integer pageNum, Integer pageSize){
@@ -73,7 +73,7 @@ public class PostMockFactory {
     }
 
     public static PostSearchRequest makePostKeywordSearchRequest(){
-        return new PostSearchRequest(PostData.keyword,0,PostData.PAGE_POSTS_MAX_SIZE);
+        return new PostSearchRequest(PostData.keyword,1,PostData.PAGE_POSTS_MAX_SIZE);
     }
 
     public static PostSearchRequest makePostLackSearchRequest(){

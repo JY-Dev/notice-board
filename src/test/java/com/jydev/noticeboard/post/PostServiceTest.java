@@ -78,12 +78,14 @@ public class PostServiceTest {
     public void findPagePostsTest(){
         int pageNum = 2;
         int pageSize = 10;
+        List<Long> postIds = new ArrayList<>();
         for (int i = 0; i < PostData.PAGE_POSTS_MAX_SIZE; i++) {
-            postService.registerPost(PostMockFactory.makePostRequest());
+            Optional<Post> post = postService.registerPost(PostMockFactory.makePostRequest());
+            postIds.add(0,post.get().getId());
         }
         List<PagePost> result = postService.findPagePosts(PostMockFactory.makePostSearchRequest(pageNum,pageSize));
         for(int i = 0; i < pageSize; i++){
-            Assertions.assertThat(i+pageNum*pageSize+1L).isEqualTo(result.get(i).getId());
+            Assertions.assertThat(postIds.get(i+pageSize)).isEqualTo(result.get(i).getId());
         }
     }
 
