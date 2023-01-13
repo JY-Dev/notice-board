@@ -110,10 +110,10 @@ public class PostServiceTest {
         PostSearchRequest postSearchRequest = PostMockFactory.makePostAllSearchRequest(3);
         List<PagePost> pagePosts = postService.findPagePosts(postSearchRequest);
         List<Long> pageIndicator = postService.getPageIndicator(postSearchRequest, pagePosts.size());
-        for (Long i : pageIndicator) {
-            System.out.println(i);
-        }
         Assertions.assertThat(pageIndicator.size()).isEqualTo(PostService.indicatorSize);
+        for (int i = 0; i < 5; i++) {
+            Assertions.assertThat(pageIndicator.get(i)).isEqualTo(i+1);
+        }
     }
 
     @Test
